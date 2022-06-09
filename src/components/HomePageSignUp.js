@@ -5,25 +5,30 @@ import {
   signInWithPopup,
   signInWithRedirect,
 } from "firebase/auth";
+import { get, set, ref } from "firebase/database";
 import { forwardRef, useContext, useState } from "react";
-import { SignedInContext } from "./Context";
+import { DbContext, SignedInContext, UserIDContext } from "./Context";
+import React from "react";
 
-const HomePageSignUp = () => {
-  const value = useContext(SignedInContext);
-  console.log(value);
+const HomePageSignUp = ({userID, setTest}) => { 
+    
+  let dbRef = {};
+  const dbContext = useContext(DbContext);
+  get(ref(dbContext, "users/")).then((val) => (dbRef = val.val()));
   const signIn = async () => {
+    const id = checkID(); //checks if id is in db returns id if found else 
+    if (!id) return;
+    localStorage.setItem('userid', id);
     const provider = new FacebookAuthProvider();
     const auth = getAuth();
     await signInWithRedirect(auth, provider);
+    
   };
 
   const checkID = () => {
     const input = document.querySelector("#userid");
     const errormessage = document.querySelector(".errormessage");
     const button = document.querySelector("#signupbut");
-    // button.onfocus = () => {
-    //   console.log("haha");
-    // };
     button.classList.add("disabled");
     button.setAttribute("disabled", true);
     errormessage.style.color = "rgba(0,0,0,0.4)";
@@ -38,11 +43,17 @@ const HomePageSignUp = () => {
     if (input.value.length > 15) {
       errormessage.innerText = "Too long";
       return;
+    }
+    console.log(dbRef);
+    if (dbRef[input.value]) {
+      errormessage.innerText = "ID has already been taken";
+      return;
     } else {
       errormessage.innerText = "ID is available";
       errormessage.style.color = "rgba(0,180,0,1)";
       button.classList.remove("disabled");
       button.disabled = false;
+      return input.value;
     }
   };
   return (
@@ -70,8 +81,8 @@ const HomePageSignUp = () => {
             <button
               id="signupbut"
               className="disabled"
-              disabled={true}
               onClick={() => {
+
                 signIn();
               }}
             >
@@ -94,5 +105,7 @@ const HomePageSignUp = () => {
     </div>
   );
 };
+
+// const ForHomePageSignUp = React.forwardRef(HomePageSignUp);
 
 export default HomePageSignUp;

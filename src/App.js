@@ -1,29 +1,8 @@
-<<<<<<< HEAD
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-=======
 import Navigation from "./components/Navigation";
 import style from "./styles/index.css";
 import HomePageSignUp from "./components/HomePageSignUp";
 import { FacebookAuthProvider } from "firebase/auth";
+import { get, getDatabase, ref, set } from "firebase/database";
 import {
   getAuth,
   signInWithRedirect,
@@ -35,7 +14,11 @@ import {
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { useEffect, useRef, useState } from "react";
-import { SignedInContext } from "./components/Context";
+import {
+  SignedInContext,
+  DbContext,
+  UserIDContext,
+} from "./components/Context";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -45,6 +28,8 @@ import { SignedInContext } from "./components/Context";
 const firebaseConfig = {
   apiKey: "AIzaSyAheUFx9JHJ-oVLv9dKDHQRMFbv9wQrrm8",
   authDomain: "insta-clone-3ada4.firebaseapp.com",
+  databaseURL:
+    "https://insta-clone-3ada4-default-rtdb.asia-southeast1.firebasedatabase.app/",
   projectId: "insta-clone-3ada4",
   storageBucket: "insta-clone-3ada4.appspot.com",
   messagingSenderId: "713251379457",
@@ -55,32 +40,60 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+const database = getDatabase();
 
 let imgsrc;
 
-const printIt = async () => {
-  const auth = getAuth();
-  const result = await getRedirectResult(auth);
-  console.log(result);
-  return result;
-};
-
 function App() {
+  const [test, setTest] = useState("");
   const [user, setUser] = useState({});
+  const [db, setDb] = useState(database);
+  const userID = useRef("test");
+  // const getDbData = async () => {
+  //   const db = await get(ref(database, "users/"));
+  //   setDb(value);
+  // };
+
   useEffect(() => {
     printIt().then((value) => {
-      console.log(value);
-      if (value != null) {
+      let userid = localStorage.getItem('userid');
+      if (value != null && userid) {
+        console.log(userID.current);
+        set(ref(db, "users/" + userid), {
+          uid: value.user.uid,
+          email: value.user.email,
+        });
         setUser(value.user);
       }
     });
-  });
+  }, []);
+
+  useEffect(() => {
+    let database = getDatabase();
+    setDb(database);
+    console.log("ran it");
+  }, []);
+
+  const printIt = async () => {
+    const auth = getAuth();
+    const result = await getRedirectResult(auth);
+
+    console.log(result);
+    return result;
+  };
   return (
     <div className="App" style={style}>
-      <SignedInContext.Provider value={user}>
-        {user.uid ? <Navigation /> : <HomePageSignUp></HomePageSignUp>}
-      </SignedInContext.Provider>
->>>>>>> 7e879d4 (Partial sign up page)
+      <DbContext.Provider value={db}>
+        <SignedInContext.Provider value={user}>
+          {/* <UserIDContext.Provider value={userID}> */}
+          {user.uid ? (
+            <Navigation />
+          ) : (
+            <HomePageSignUp userID={userID} setTest={setTest}></HomePageSignUp>
+          )}
+          {/* </UserIDContext.Provider> */}
+        </SignedInContext.Provider>
+      </DbContext.Provider>
     </div>
   );
 }
