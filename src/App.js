@@ -46,41 +46,10 @@ const storage = getStorage(app);
 function App() {
   const [user, setUser] = useState({});
   const [db, setDb] = useState(database);
+  const loggedIn = useRef(false);
 
   useEffect(() => {
-    printIt().then(async (value) => {
-      const fun = () => {
-        // console.log(user);
-        // if (user.uid) return;
-        let userid = localStorage.getItem("userid");
-        let val = {
-          name: value.user.displayName,
-          uid: userid,
-          usercode: value.user.uid,
-          photo: value.user.photoURL,
-          email: value.user.email,
-          followers: ["daddy"],
-          following: ["daddy"],
-          posts: "",
-        };
-        if (value != null && userid) {
-          console.log("asdfadsfa");
-          set(ref(db, "users/" + userid), val);
-          setUser(val);
-        }
-      };
-      if (!value) return;
-      let data = await get(ref(db, "users/"));
-      data = data.val();
-      Object.keys(data).forEach((key) => {
-        console.log(data[key].usercode, value.user.uid);
-        if (data[key].usercode === value.user.uid) {
-          localStorage.setItem("userid", data[key].uid);
-          console.log(key, data[key]);
-          setUser(data[key], fun());
-        }
-      });
-    });
+    printIt();
   }, []);
 
   useEffect(() => {
@@ -91,19 +60,36 @@ function App() {
   const printIt = async () => {
     const auth = getAuth();
     const value = await getRedirectResult(auth);
+    if (!value) return;
     let userid = localStorage.getItem("userid");
-    // let data = await get(ref(db, "users/"));
-    //   data = data.val();
-    //   Object.keys(data).forEach((key) => {
-    //     console.log(data[key].usercode, value.user.uid);
-    //     if (data[key].usercode === value.user.uid) {
-    //       localStorage.setItem("userid", data[key].uid);
-    //       console.log(key, data[key]);
-    //       setUser(data[key]);
+    let data = await get(ref(db, "users/"));
+    data = data.val();
+    Object.keys(data).forEach(async (key) => {
+      console.log(data[key].usercode, value.user.uid);
+      if (data[key].usercode === value.user.uid) {
+        localStorage.setItem("userid", data[key].uid);
+        console.log(key, data[key]);
+        loggedIn.current = true;
+        setUser(data[key]);
+      }
+    });
+    if (loggedIn.current) return;
+    let val = {
+      name: value.user.displayName,
+      uid: userid,
+      usercode: value.user.uid,
+      photo: value.user.photoURL,
+      email: value.user.email,
+      followers: ["daddy"],
+      following: ["daddy"],
+      posts: "",
+    };
+    if (value != null && userid) {
+      console.log("asdfadsfa");
+      set(ref(db, "users/" + userid), val);
+      setUser(val);
+    }
 
-    //     }
-    //   });
-    
     return value;
   };
   return (
