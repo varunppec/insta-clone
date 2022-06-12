@@ -1,8 +1,11 @@
 import Navigation from "./components/Navigation";
 import style from "./styles/index.css";
 import HomePageSignUp from "./components/HomePageSignUp";
+import MyProfile from "./components/MyProfile";
 import { FacebookAuthProvider } from "firebase/auth";
 import { get, getDatabase, ref, set } from "firebase/database";
+import { getFirestore, addDoc, collection } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 import {
   getAuth,
   signInWithRedirect,
@@ -10,21 +13,17 @@ import {
   getRedirectResult,
 } from "firebase/auth";
 
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { useEffect, useRef, useState } from "react";
 import {
-  SignedInContext,
+  UserContext,
   DbContext,
-  UserIDContext,
+  StoreContext,
+  SetUserContext,
 } from "./components/Context";
+import HomePage from "./components/HomePage";
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyAheUFx9JHJ-oVLv9dKDHQRMFbv9wQrrm8",
   authDomain: "insta-clone-3ada4.firebaseapp.com",
@@ -41,58 +40,91 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const database = getDatabase();
-
-let imgsrc;
+const testdb = getFirestore(app);
+const storage = getStorage(app);
 
 function App() {
-  const [test, setTest] = useState("");
   const [user, setUser] = useState({});
   const [db, setDb] = useState(database);
-  const userID = useRef("test");
-  // const getDbData = async () => {
-  //   const db = await get(ref(database, "users/"));
-  //   setDb(value);
-  // };
 
   useEffect(() => {
-    printIt().then((value) => {
-      let userid = localStorage.getItem('userid');
-      if (value != null && userid) {
-        console.log(userID.current);
-        set(ref(db, "users/" + userid), {
-          uid: value.user.uid,
+    printIt().then(async (value) => {
+      const fun = () => {
+        // console.log(user);
+        // if (user.uid) return;
+        let userid = localStorage.getItem("userid");
+        let val = {
+          name: value.user.displayName,
+          uid: userid,
+          usercode: value.user.uid,
+          photo: value.user.photoURL,
           email: value.user.email,
-        });
-        setUser(value.user);
-      }
+          followers: ["daddy"],
+          following: ["daddy"],
+          posts: "",
+        };
+        if (value != null && userid) {
+          console.log("asdfadsfa");
+          set(ref(db, "users/" + userid), val);
+          setUser(val);
+        }
+      };
+      if (!value) return;
+      let data = await get(ref(db, "users/"));
+      data = data.val();
+      Object.keys(data).forEach((key) => {
+        console.log(data[key].usercode, value.user.uid);
+        if (data[key].usercode === value.user.uid) {
+          localStorage.setItem("userid", data[key].uid);
+          console.log(key, data[key]);
+          setUser(data[key], fun());
+        }
+      });
     });
   }, []);
 
   useEffect(() => {
     let database = getDatabase();
     setDb(database);
-    console.log("ran it");
   }, []);
 
   const printIt = async () => {
     const auth = getAuth();
-    const result = await getRedirectResult(auth);
+    const value = await getRedirectResult(auth);
+    let userid = localStorage.getItem("userid");
+    // let data = await get(ref(db, "users/"));
+    //   data = data.val();
+    //   Object.keys(data).forEach((key) => {
+    //     console.log(data[key].usercode, value.user.uid);
+    //     if (data[key].usercode === value.user.uid) {
+    //       localStorage.setItem("userid", data[key].uid);
+    //       console.log(key, data[key]);
+    //       setUser(data[key]);
 
-    console.log(result);
-    return result;
+    //     }
+    //   });
+    
+    return value;
   };
   return (
     <div className="App" style={style}>
       <DbContext.Provider value={db}>
-        <SignedInContext.Provider value={user}>
-          {/* <UserIDContext.Provider value={userID}> */}
-          {user.uid ? (
-            <Navigation />
-          ) : (
-            <HomePageSignUp userID={userID} setTest={setTest}></HomePageSignUp>
-          )}
-          {/* </UserIDContext.Provider> */}
-        </SignedInContext.Provider>
+        <UserContext.Provider value={user}>
+          <StoreContext.Provider value={storage}>
+            <SetUserContext.Provider value={setUser}>
+              {user.uid ? (
+                <>
+                  <Navigation />
+                  <HomePage />
+                </>
+              ) : (
+                <>
+                  <HomePageSignUp />
+                </>
+              )}
+            </SetUserContext.Provider>
+          </StoreContext.Provider>
+        </UserContext.Provider>
       </DbContext.Provider>
     </div>
   );

@@ -37,8 +37,13 @@ nav {
 
 .navicons > svg {
     font-size: 1.8rem;
+    fill: none;
+    stroke-width: 1.4px;
+    stroke: black; 
 }
-
+.navicons > svg:hover {
+    fill:black
+}
 .signupinputs > * {
     margin: 2px;
 }
@@ -137,4 +142,177 @@ nav {
 
 .disabled {
     opacity: 50%;
+}
+
+.homepageholder {
+    display: grid;
+    grid-template-columns: 4fr 2fr;
+}
+
+.userinfoholder {
+    display: flex;
+    margin-top: 80px;
+}
+
+.userinfoholder > div > img {
+    border-radius: 50%;
+    min-height: 70px;
+    min-width: 70px;
+}
+
+.userinfoholder > div:first-child {
+    margin-right: 10px;
+}
+.userinfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.userinfo > div:first-child {
+    font-size: 1.6rem;
+}
+.userinfo > div:last-child {
+    color: rgba(0, 0, 0, 0.4);
+}
+.userinfo > div:last-child::before {
+    content: "@";
+    
+}
+
+.userstats {
+    display: flex;
+    gap: 13px;
+}
+
+.userstats > div > div:last-child {
+    font-size: 0.8rem;
+    color: rgba(0,0,0,0.4);
+    margin-top: 3px;
+}
+
+.userstats > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.newpost > svg {
+    font-size: 1.2rem;
+}
+
+.modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.fileuploadholder {
+    background-color: white;
+    width: 50%;
+    height: 80%;
+    border-radius: 8px;
+}
+
+.fileuploadholder > div {
+    margin: 20px 20px;
+    height: calc(100% - 40px);
+}
+
+.fileuploadheader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: rgba(0, 0, 0, 0.5);
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+}
+
+.fileuploadheader > div:first-child {
+    font-size: 1.3rem;
+}
+
+.fileupload {
+    min-height: calc(100% - 40px - 1.3rem - 15px);
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.fileupload > div {
+    border-radius: 5px;
+}
+
+.fileupload > div:first-child {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    position: relative;
+    padding: 8px;
+    font-size: .8rem;
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.fileupload > div > svg {
+    position: relative;
+    font-size: 10rem;
+    fill: rgba(0, 0, 0, 0.9);
+}
+
+.fileupload > div > input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0%;
+}
+.fileupload > div:first-child:hover {
+    border: 1px solid rgba(0, 0, 0, 0.39);
+    background-color: rgba(0, 0, 0, 0.02);
+} 
+
+.fileupload > div > textarea {
+    resize: none;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    padding: 10px;
+    scrollbar-width: none;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    /* outline: 1px solid rgba(0, 0, 0, 0.01);; */
+}
+
+.fileupload > div > textarea:focus, .fileupload > div > textarea:hover {
+    border: none;
+    outline: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+#fileinputholder {
+    min-width: 300px;
+    min-height: calc(3 / 4 * 300px);
+}
+#fileinputholder > img {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+#postbutton {
+    min-width: 100px;
+    min-height: 35px;
+    border: none;
+    border-radius: 50px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.9);
+    font-weight: bold;
+}
+
+.obj {
+    background-color: white;
 }

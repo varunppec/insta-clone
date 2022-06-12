@@ -7,22 +7,26 @@ import {
 } from "firebase/auth";
 import { get, set, ref } from "firebase/database";
 import { forwardRef, useContext, useState } from "react";
-import { DbContext, SignedInContext, UserIDContext } from "./Context";
+import { DbContext, UserContext } from "./Context";
 import React from "react";
 
-const HomePageSignUp = ({userID, setTest}) => { 
-    
+const HomePageSignUp = ({ userID, setTest }) => {
   let dbRef = {};
   const dbContext = useContext(DbContext);
   get(ref(dbContext, "users/")).then((val) => (dbRef = val.val()));
   const signIn = async () => {
-    const id = checkID(); //checks if id is in db returns id if found else 
+    const id = checkID(); //checks if id is in db returns id if found else
     if (!id) return;
-    localStorage.setItem('userid', id);
+    localStorage.setItem("userid", id);
     const provider = new FacebookAuthProvider();
     const auth = getAuth();
     await signInWithRedirect(auth, provider);
-    
+  };
+
+  const logIn = async () => {
+    const provider = new FacebookAuthProvider();
+    const auth = getAuth();
+    await signInWithRedirect(auth, provider);
   };
 
   const checkID = () => {
@@ -82,7 +86,6 @@ const HomePageSignUp = ({userID, setTest}) => {
               id="signupbut"
               className="disabled"
               onClick={() => {
-
                 signIn();
               }}
             >
@@ -97,7 +100,13 @@ const HomePageSignUp = ({userID, setTest}) => {
           <div className="logindiv">
             <div>Already have an account?</div>
             <div className="login">
-              <div>Log in with Facebook</div>
+              <div
+                onClick={() => {
+                  logIn();
+                }}
+              >
+                Log in with Facebook
+              </div>
             </div>
           </div>
         </div>
