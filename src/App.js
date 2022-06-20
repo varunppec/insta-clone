@@ -23,6 +23,8 @@ import {
   SetUserContext,
 } from "./components/Context";
 import HomePage from "./components/HomePage";
+import ProfileSettings from "./components/ProfileSettings";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAheUFx9JHJ-oVLv9dKDHQRMFbv9wQrrm8",
@@ -47,28 +49,28 @@ function App() {
   const [user, setUser] = useState({});
   const [db, setDb] = useState(database);
   const loggedIn = useRef(false);
-
-  useEffect(() => {
-    printIt();
-  }, []);
-
   useEffect(() => {
     let database = getDatabase();
     setDb(database);
   }, []);
-
+  useEffect(() => {
+    if (localStorage.getItem("userid")) loggedIn.current = true;
+    printIt();
+  }, []);
   const printIt = async () => {
     const auth = getAuth();
     const value = await getRedirectResult(auth);
-    if (!value) return;
+    if (!value && !localStorage.getItem("userid")) return;
     let userid = localStorage.getItem("userid");
     let data = await get(ref(db, "users/"));
     data = data.val();
+    if (loggedIn.current === true) {
+      setUser(data[localStorage.getItem("userid")]);
+      return;
+    }
     Object.keys(data).forEach(async (key) => {
-      console.log(data[key].usercode, value.user.uid);
-      if (data[key].usercode === value.user.uid) {
+      if (data[key].email === value.user.email) {
         localStorage.setItem("userid", data[key].uid);
-        console.log(key, data[key]);
         loggedIn.current = true;
         setUser(data[key]);
       }
@@ -83,6 +85,8 @@ function App() {
       followers: ["daddy"],
       following: ["daddy"],
       posts: "",
+      pp: "https://firebasestorage.googleapis.com/v0/b/insta-clone-3ada4.appspot.com/o/default_pp.jpg?alt=media&token=52c9c68a-5365-4dcd-9d7b-cda5457c86cb",
+      bio: `Hey there! My name is ${value.user.displayName}. Stop stalking :(`,
     };
     if (value != null && userid) {
       console.log("asdfadsfa");
@@ -94,24 +98,71 @@ function App() {
   };
   return (
     <div className="App" style={style}>
-      <DbContext.Provider value={db}>
-        <UserContext.Provider value={user}>
-          <StoreContext.Provider value={storage}>
-            <SetUserContext.Provider value={setUser}>
-              {user.uid ? (
-                <>
-                  <Navigation />
-                  <HomePage />
-                </>
-              ) : (
-                <>
-                  <HomePageSignUp />
-                </>
-              )}
-            </SetUserContext.Provider>
-          </StoreContext.Provider>
-        </UserContext.Provider>
-      </DbContext.Provider>
+      <BrowserRouter>
+        <DbContext.Provider value={db}>
+          <UserContext.Provider value={user}>
+            <StoreContext.Provider value={storage}>
+              <SetUserContext.Provider value={setUser}>
+                <Routes>
+                  <Route
+                    path="/"
+                    element={
+                      user.uid ? (
+                        <>
+                          <Navigation />
+                          <HomePage />
+                        </>
+                      ) : (
+                        <>{<HomePageSignUp />}</>
+                      )
+                    }
+                  ></Route>
+                  <Route
+                    path="/settings"
+                    element={
+                      <>
+                        <Navigation />
+                        <ProfileSettings />
+                      </>
+                    }
+                  ></Route>
+                  <Route
+                    path="/profile"
+                    element={
+                      <>
+                        <Navigation />
+                        <MyProfile />
+                      </>
+                    }
+                  >
+                    <Route
+                      path=":pid"
+                      element={
+                        <>
+                          <Navigation />
+                          <MyProfile />
+                        </>
+                      }
+                    ></Route>
+                  </Route>
+                </Routes>
+                {/* {user.uid ? (
+                  <>
+                    <Navigation />
+                    <ProfileSettings />
+                    <MyProfile />
+                    <HomePage />
+                  </>
+                ) : (
+                  <>
+                    <HomePageSignUp />
+                  </>
+                )} */}
+              </SetUserContext.Provider>
+            </StoreContext.Provider>
+          </UserContext.Provider>
+        </DbContext.Provider>
+      </BrowserRouter>
     </div>
   );
 }

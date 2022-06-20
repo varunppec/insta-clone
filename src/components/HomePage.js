@@ -20,6 +20,9 @@ import {
   ref as sref,
   uploadBytes,
 } from "firebase/storage";
+
+
+
 const HomePage = () => {
   const [modalActive, setModalActive] = useState(false);
   const user = useContext(UserContext);
@@ -28,6 +31,7 @@ const HomePage = () => {
   let dbRef = {};
   const dbContext = useContext(DbContext);
   get(ref(dbContext, "users/")).then((val) => (dbRef = val.val()));
+
 
   const uploadFile = async () => {
     const img = document.querySelector("#file");
@@ -43,7 +47,7 @@ const HomePage = () => {
 
     let data = await get(ref(dbContext, `users/${userid}`));
     data = await data.val();
-    let oldPosts = data["posts"] == "" ? false : true;
+    let oldPosts = data["posts"] === "" ? false : true;
     if (oldPosts)
       data["posts"] = [
         ...data["posts"],
@@ -79,6 +83,8 @@ const HomePage = () => {
     })(img);
     reader.readAsDataURL(file);
   }
+
+
   const dragAndDrop = () => {
     function dragenter(e) {
       e.stopPropagation();
@@ -168,7 +174,7 @@ const HomePage = () => {
             <div>Following</div>
           </div>
           <div className="followers">
-            <div>{user.followers.length ? user.followers.length : 0}</div>
+            <div>{user.followers.length}</div>
             <div>Followers</div>
           </div>
           <div className="posts">
