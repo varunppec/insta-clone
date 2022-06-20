@@ -206,7 +206,7 @@ nav {
 }
 
 .modal {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
@@ -215,6 +215,7 @@ nav {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 10;
 }
 
 .fileuploadholder {
@@ -377,7 +378,7 @@ nav {
     display: grid;
     grid-template-columns: 1fr 4fr;
     margin-top: 0;
-    transform: translateY(-25%);
+    transform: translateY(-100px);
 }
 
 .sideprofile {

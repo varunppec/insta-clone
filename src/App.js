@@ -21,6 +21,8 @@ import {
   DbContext,
   StoreContext,
   SetUserContext,
+  ModalContext,
+  SetModalContext
 } from "./components/Context";
 import HomePage from "./components/HomePage";
 import ProfileSettings from "./components/ProfileSettings";
@@ -48,6 +50,7 @@ const storage = getStorage(app);
 function App() {
   const [user, setUser] = useState({});
   const [db, setDb] = useState(database);
+  const [modalActive, setModalActive] = useState(false);
   const loggedIn = useRef(false);
   useEffect(() => {
     let database = getDatabase();
@@ -99,69 +102,73 @@ function App() {
   return (
     <div className="App" style={style}>
       <BrowserRouter>
-        <DbContext.Provider value={db}>
-          <UserContext.Provider value={user}>
-            <StoreContext.Provider value={storage}>
-              <SetUserContext.Provider value={setUser}>
-                <Routes>
-                  <Route
-                    path="/"
-                    element={
-                      user.uid ? (
-                        <>
-                          <Navigation />
-                          <HomePage />
-                        </>
-                      ) : (
-                        <>{<HomePageSignUp />}</>
-                      )
-                    }
-                  ></Route>
-                  <Route
-                    path="/settings"
-                    element={
+        <ModalContext.Provider value={modalActive}>
+          <SetModalContext.Provider value={setModalActive}>
+            <DbContext.Provider value={db}>
+              <UserContext.Provider value={user}>
+                <StoreContext.Provider value={storage}>
+                  <SetUserContext.Provider value={setUser}>
+                    <Routes>
+                      <Route
+                        path="/"
+                        element={
+                          user.uid ? (
+                            <>
+                              <Navigation />
+                              <HomePage />
+                            </>
+                          ) : (
+                            <>{<HomePageSignUp />}</>
+                          )
+                        }
+                      ></Route>
+                      <Route
+                        path="/settings"
+                        element={
+                          <>
+                            <Navigation />
+                            <ProfileSettings />
+                          </>
+                        }
+                      ></Route>
+                      <Route
+                        path="/profile"
+                        element={
+                          <>
+                            <Navigation />
+                            <MyProfile />
+                          </>
+                        }
+                      >
+                        <Route
+                          path=":pid"
+                          element={
+                            <>
+                              <Navigation />
+                              <MyProfile />
+                            </>
+                          }
+                        ></Route>
+                      </Route>
+                    </Routes>
+                    {/* {user.uid ? (
                       <>
                         <Navigation />
                         <ProfileSettings />
-                      </>
-                    }
-                  ></Route>
-                  <Route
-                    path="/profile"
-                    element={
-                      <>
-                        <Navigation />
                         <MyProfile />
+                        <HomePage />
                       </>
-                    }
-                  >
-                    <Route
-                      path=":pid"
-                      element={
-                        <>
-                          <Navigation />
-                          <MyProfile />
-                        </>
-                      }
-                    ></Route>
-                  </Route>
-                </Routes>
-                {/* {user.uid ? (
-                  <>
-                    <Navigation />
-                    <ProfileSettings />
-                    <MyProfile />
-                    <HomePage />
-                  </>
-                ) : (
-                  <>
-                    <HomePageSignUp />
-                  </>
-                )} */}
-              </SetUserContext.Provider>
-            </StoreContext.Provider>
-          </UserContext.Provider>
-        </DbContext.Provider>
+                    ) : (
+                      <>
+                        <HomePageSignUp />
+                      </>
+                    )} */}
+                  </SetUserContext.Provider>
+                </StoreContext.Provider>
+              </UserContext.Provider>
+            </DbContext.Provider>
+          </SetModalContext.Provider>
+        </ModalContext.Provider>
       </BrowserRouter>
     </div>
   );

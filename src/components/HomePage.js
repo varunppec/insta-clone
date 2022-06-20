@@ -6,6 +6,8 @@ import {
   UserContext,
   StoreContext,
   SetUserContext,
+  ModalContext,
+  SetModalContext,
 } from "./Context";
 import {
   AddCircleOutline,
@@ -20,11 +22,11 @@ import {
   ref as sref,
   uploadBytes,
 } from "firebase/storage";
-
-
+import ModalCreator from "./ModalCreator";
 
 const HomePage = () => {
-  const [modalActive, setModalActive] = useState(false);
+  const modalActive = useContext(ModalContext);
+  const setModalActive = useContext(SetModalContext);
   const user = useContext(UserContext);
   const storage = useContext(StoreContext);
   const setUser = useContext(SetUserContext);
@@ -33,130 +35,9 @@ const HomePage = () => {
   get(ref(dbContext, "users/")).then((val) => (dbRef = val.val()));
 
 
-  const uploadFile = async () => {
-    const img = document.querySelector("#file");
-    const caption = document.querySelector("#caption").value;
-    const file = img.files[0];
-    const imageRef = sref(
-      storage,
-      `${localStorage.getItem("userid")}/${uniqid()}`
-    );
-    await uploadBytes(imageRef, file);
-    let userid = localStorage.getItem("userid");
-    let val = await getDownloadURL(imageRef);
-
-    let data = await get(ref(dbContext, `users/${userid}`));
-    data = await data.val();
-    let oldPosts = data["posts"] === "" ? false : true;
-    if (oldPosts)
-      data["posts"] = [
-        ...data["posts"],
-        { url: val, caption, time: new Date().getTime() },
-      ];
-    else data["posts"] = [{ url: val, caption, time: new Date().getTime() }];
-    await set(ref(dbContext, `users/${userid}`), data);
-    setUser(data);
-    setModalActive(false);
-
-  };
-
-  function handleFile(files) {
-    const file = files[0];
-    if (!file.type.startsWith("image/")) {
-      return;
-    }
-    const image = document.querySelector(".obj");
-    if (image) {
-      image.remove();
-    }
-    const preview = document.querySelector("#fileinputholder");
-    const img = document.createElement("img");
-    img.classList.add("obj");
-    img.file = file;
-    preview.appendChild(img); // Assuming that "preview" is the div output where the content will be displayed.
-
-    const reader = new FileReader();
-    reader.onload = (function (aImg) {
-      return function (e) {
-        aImg.src = e.target.result;
-      };
-    })(img);
-    reader.readAsDataURL(file);
-  }
-
-
-  const dragAndDrop = () => {
-    function dragenter(e) {
-      e.stopPropagation();
-      e.preventDefault();
-    }
-
-    function dragover(e) {
-      e.stopPropagation();
-      e.preventDefault();
-    }
-    function drop(e) {
-      e.stopPropagation();
-      e.preventDefault();
-
-      const dt = e.dataTransfer;
-      const files = dt.files;
-
-      handleFile(files);
-    }
-
-    const dropbox = document.querySelector("#fileinputholder");
-    dropbox.addEventListener("dragenter", dragenter, false);
-    dropbox.addEventListener("dragover", dragover, false);
-    dropbox.addEventListener("drop", drop, false);
-  };
-  // dragAndDrop();
-
-  const modalCreator = () => {
-    return (
-      <div className="modal">
-        <div className="fileuploadholder">
-          <div>
-            <div className="fileuploadheader">
-              <div>Create New Post</div>
-              <CloseOutlined
-                onClick={() => {
-                  setModalActive(false);
-                }}
-              />
-            </div>
-            <div className="fileupload">
-              <div id="fileinputholder">
-                <input
-                  id="file"
-                  type="file"
-                  onInput={(e) => {
-                    handleFile(e.target.files);
-                  }}
-                ></input>
-                <CloudUpload></CloudUpload>
-                File size limit is 5MB
-              </div>
-              <div className="caption">
-                <textarea
-                  rows="4"
-                  cols="20"
-                  placeholder="Enter Caption..."
-                  id="caption"
-                ></textarea>
-              </div>
-              <button id="postbutton" onClick={() => uploadFile()}>
-                Post
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
   return (
     <div className="homepageholder">
-      {modalActive ? modalCreator() : null}
+      {modalActive ? <ModalCreator /> : null}
       <div></div>
       <div>
         <div className="userinfoholder">

@@ -1,15 +1,17 @@
 import { useContext } from "react";
-import { DbContext, SetUserContext, UserContext } from "./Context";
+import { DbContext, ModalContext, SetModalContext, SetUserContext, UserContext } from "./Context";
 import uniqid from "uniqid";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { get, ref, set } from "firebase/database";
 import { Send as Send } from "@material-ui/icons";
-
+import ModalCreator from "./ModalCreator";
 const MyProfile = () => {
   const [profile, setProfile] = useState({});
   const navigate = useNavigate();
+  const modalActive = useContext(ModalContext);
+  const setModalActive = useContext(SetModalContext);
   const setUser = useContext(SetUserContext);
   const db = useContext(DbContext);
   const { pid } = useParams();
@@ -82,6 +84,7 @@ const MyProfile = () => {
     console.log(pid, userContext.uid);
     return (
       <div className="myprofileholder">
+        {modalActive ? <ModalCreator /> : null}
         <div className="profileppholder">
           <img src={user.pp} alt=""></img>
         </div>
@@ -107,7 +110,7 @@ const MyProfile = () => {
           ) : (
             <div className="profbuttons">
               <button onClick={() => navigate("/settings")}>Edit Profile</button>
-              <button>+</button>
+              <button onClick={() => setModalActive(true)}>+</button>
             </div>
           )}
           {/* <div className="profbuttons">
