@@ -37,6 +37,7 @@ nav {
 
 .navicons {
     display: flex;
+    align-items: center;
     gap: 15px;
 }
 
@@ -45,6 +46,9 @@ nav {
     fill: none;
     stroke-width: 1.4px;
     stroke: black; 
+}
+.navicons > svg:nth-child(2) {
+    font-size: 1.6rem;
 }
 .navicons > svg:hover {
     fill:black
@@ -185,6 +189,7 @@ nav {
 }
 
 .userstats {
+    margin-top: 5px;
     display: flex;
     gap: 13px;
 }
@@ -628,3 +633,84 @@ nav {
     font-size: 1.3rem;
 }
 
+.followholder {
+    background-color: white;
+    width: 50%;
+    height: 80%;
+    border-radius: 8px;
+}
+.followholder > div {
+    margin: 20px 20px;
+    height: calc(100% - 40px);
+}
+.followheader {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    color: rgba(0, 0, 0, 0.5);
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.followheader > *:last-child {
+    margin-left: auto;
+}
+
+.active {
+    color: black;
+}
+
+.followingitems {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    height: 60px;
+    gap: 20px;
+}
+.followingitems > img {
+    min-width: 60px;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.followingitems > div {
+    display: flex;
+    flex-direction: column;
+    max-width: 250px;
+    min-width: 100px;
+    gap: 2px;
+}
+.followingitems > div > div:first-child {
+    font-size: 1.4rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.followingitems > div > div:last-child {
+    color: rgba(0, 0, 0, 0.4);
+}
+.followingitems > div > div:last-child::before {
+    content: "@"; 
+}
+
+.followingitems > button {
+    margin-left: auto;
+    height: 45px;
+    min-width: 100px;
+    width: 120px;
+    border-radius: 50px;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    color: rgba(0, 0, 0, 0.4);
+    font-weight: bold;
+    font-size: 1rem;
+    background-color: white;
+}
+
+.nofollowing {
+    color: rgba(0, 0, 0, 0.5);
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-top: 20px;
+}

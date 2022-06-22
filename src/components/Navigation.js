@@ -1,6 +1,6 @@
 import {
   HomeRounded as HomeOutlined,
-  InboxRounded as InboxOutlined,
+  ChatBubble as InboxOutlined,
   FavoriteRounded as Favorite,
   PersonRounded as Person,
 } from "@material-ui/icons";

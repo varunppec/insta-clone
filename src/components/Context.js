@@ -4,5 +4,10 @@ export const UserContext = createContext();
 export const DbContext = createContext();
 export const StoreContext = createContext();
 export const SetUserContext = createContext();
-export const ModalContext = createContext();
-export const SetModalContext = createContext();
+export const PostModalContext = createContext();
+export const SetPostModalContext = createContext();
+export const FollowModalContext = createContext();
+export const SetFollowModalContext = createContext();
+export const FollowingClickContext= createContext();
+export const SetFollowingClickContext = createContext();
+

@@ -4,40 +4,36 @@ import uniqid from "uniqid";
 import {
   DbContext,
   UserContext,
-  StoreContext,
-  SetUserContext,
-  ModalContext,
-  SetModalContext,
+  PostModalContext,
+  SetPostModalContext,
+  FollowModalContext,
+  SetFollowModalContext,
+  SetFollowingClickContext,
 } from "./Context";
 import {
   AddCircleOutline,
   CloudUploadOutlined as CloudUpload,
   CloseOutlined,
 } from "@material-ui/icons";
-import { useState } from "react";
-import {
-  getDownloadURL,
-  getMetadata,
-  listAll,
-  ref as sref,
-  uploadBytes,
-} from "firebase/storage";
-import ModalCreator from "./ModalCreator";
+
+import PostModal from "./PostModal";
+import FollowModal from "./FollowModal";
 
 const HomePage = () => {
-  const modalActive = useContext(ModalContext);
-  const setModalActive = useContext(SetModalContext);
+  const postModalActive = useContext(PostModalContext);
+  const setFollowingClick = useContext(SetFollowingClickContext);
+  const setPostModalActive = useContext(SetPostModalContext);
+  const followModalActive = useContext(FollowModalContext);
+  const setFollowModalActive = useContext(SetFollowModalContext);
   const user = useContext(UserContext);
-  const storage = useContext(StoreContext);
-  const setUser = useContext(SetUserContext);
   let dbRef = {};
   const dbContext = useContext(DbContext);
   get(ref(dbContext, "users/")).then((val) => (dbRef = val.val()));
 
-
   return (
     <div className="homepageholder">
-      {modalActive ? <ModalCreator /> : null}
+      {postModalActive ? <PostModal /> : null}
+      {followModalActive ? <FollowModal /> : null}
       <div></div>
       <div>
         <div className="userinfoholder">
@@ -50,22 +46,34 @@ const HomePage = () => {
           </div>
         </div>
         <div className="userstats">
-          <div className="following">
-            <div>{user.following.length}</div>
+          <div
+            className="following"
+            onClick={() => {
+              setFollowModalActive(true);
+              setFollowingClick(true);
+            }}
+          >
+            <div>{user.following ? user.following.length : 0}</div>
             <div>Following</div>
           </div>
-          <div className="followers">
-            <div>{user.followers.length}</div>
+          <div
+            className="followers"
+            onClick={() => {
+              setFollowModalActive(true);
+              setFollowingClick(false);
+            }}
+          >
+            <div>{user.followers.length ? user.followers.length : 0}</div>
             <div>Followers</div>
           </div>
           <div className="posts">
-            <div>{user.posts.length}</div>
+            <div>{user.posts.length ? user.posts.length: 0}</div>
             <div>Posts</div>
           </div>
           <div
             className="newpost"
             onClick={() => {
-              setModalActive(true);
+              setPostModalActive(true);
             }}
           >
             <AddCircleOutline />

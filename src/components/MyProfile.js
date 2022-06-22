@@ -1,22 +1,35 @@
 import { useContext } from "react";
-import { DbContext, ModalContext, SetModalContext, SetUserContext, UserContext } from "./Context";
+import {
+  DbContext,
+  FollowModalContext,
+  PostModalContext,
+  SetFollowingClickContext,
+  SetFollowModalContext,
+  SetPostModalContext,
+  SetUserContext,
+  UserContext,
+} from "./Context";
 import uniqid from "uniqid";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { get, ref, set } from "firebase/database";
 import { Send as Send } from "@material-ui/icons";
-import ModalCreator from "./ModalCreator";
+import PostModal from "./PostModal";
+import FollowModal from "./FollowModal";
 const MyProfile = () => {
   const [profile, setProfile] = useState({});
   const navigate = useNavigate();
-  const modalActive = useContext(ModalContext);
-  const setModalActive = useContext(SetModalContext);
+  const setFollowingClick = useContext(SetFollowingClickContext);
+  const followModalActive = useContext(FollowModalContext);
+  const setFollowModalActive = useContext(SetFollowModalContext);
+  const postModalActive = useContext(PostModalContext);
+  const setPostModalActive = useContext(SetPostModalContext);
   const setUser = useContext(SetUserContext);
   const db = useContext(DbContext);
   const { pid } = useParams();
+  console.log(pid);
   const userContext = useContext(UserContext);
-  console.log('condition', pid, Object.keys(profile).length, userContext.uid)
   if (pid && Object.keys(profile).length === 0) {
     get(ref(db, `users/${pid}`)).then((snap) => {
       if (snap.val() === null || pid === localStorage.getItem("userid")) {
@@ -25,8 +38,10 @@ const MyProfile = () => {
       } else setProfile(snap.val());
     });
   }
+  useEffect(() => {
+    if (!pid) setProfile({});
+  }, [pid])
   const user = Object.keys(profile).length ? profile : userContext;
-
   const followFunction = async () => {
     if (
       userContext.following
@@ -81,10 +96,10 @@ const MyProfile = () => {
     }
   };
   if (user.email && userContext.email) {
-    console.log(pid, userContext.uid);
     return (
       <div className="myprofileholder">
-        {modalActive ? <ModalCreator /> : null}
+        {postModalActive ? <PostModal /> : null}
+        {followModalActive ? <FollowModal /> : null}
         <div className="profileppholder">
           <img src={user.pp} alt=""></img>
         </div>
@@ -109,14 +124,12 @@ const MyProfile = () => {
             </div>
           ) : (
             <div className="profbuttons">
-              <button onClick={() => navigate("/settings")}>Edit Profile</button>
-              <button onClick={() => setModalActive(true)}>+</button>
+              <button onClick={() => navigate("/settings")}>
+                Edit Profile
+              </button>
+              <button onClick={() => setPostModalActive(true)}>+</button>
             </div>
           )}
-          {/* <div className="profbuttons">
-            <button>Edit Profile</button>
-            <button>+</button>
-          </div> */}
         </div>
         <div className="profiledetails">
           <div className="sideprofile">
@@ -129,11 +142,21 @@ const MyProfile = () => {
               </div>
             </div>
             <div className="followinfo">
-              <div>
+              <div
+                onClick={() => {
+                  setFollowModalActive(true);
+                  setFollowingClick(true);
+                }}
+              >
                 <h3>{user.following ? user.following.length : 0}</h3>
                 <div>Following</div>
               </div>
-              <div>
+              <div
+                onClick={() => {
+                  setFollowModalActive(true);
+                  setFollowingClick(false);
+                }}
+              >
                 <h3>{user.followers ? user.followers.length : 0}</h3>
                 <div>Followers</div>
               </div>

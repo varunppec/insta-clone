@@ -9,17 +9,17 @@ import {
 import { useContext } from "react";
 import {
   DbContext,
-  ModalContext,
-  SetModalContext,
+  PostModalContext,
+  SetPostModalContext,
   SetUserContext,
   StoreContext,
 } from "./Context";
 
-const ModalCreator = () => {
+const PostModal = () => {
   const setUser = useContext(SetUserContext);
   const storage = useContext(StoreContext);
-  const modalActive = useContext(ModalContext);
-  const setModalActive = useContext(SetModalContext);
+  const modalActive = useContext(PostModalContext);
+  const setModalActive = useContext(SetPostModalContext);
   const db = useContext(DbContext);
   const uploadFile = async () => {
     const img = document.querySelector("#file");
@@ -113,4 +113,4 @@ const ModalCreator = () => {
   );
 };
 
-export default ModalCreator;
+export default PostModal;

@@ -2,27 +2,23 @@ import Navigation from "./components/Navigation";
 import style from "./styles/index.css";
 import HomePageSignUp from "./components/HomePageSignUp";
 import MyProfile from "./components/MyProfile";
-import { FacebookAuthProvider } from "firebase/auth";
 import { get, getDatabase, ref, set } from "firebase/database";
-import { getFirestore, addDoc, collection } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-import {
-  getAuth,
-  signInWithRedirect,
-  signInWithPopup,
-  getRedirectResult,
-} from "firebase/auth";
+import { getAuth, getRedirectResult } from "firebase/auth";
 
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { useEffect, useRef, useState } from "react";
 import {
   UserContext,
   DbContext,
   StoreContext,
   SetUserContext,
-  ModalContext,
-  SetModalContext
+  PostModalContext,
+  SetPostModalContext,
+  FollowModalContext,
+  SetFollowModalContext,
+  SetFollowingClickContext,
+  FollowingClickContext
 } from "./components/Context";
 import HomePage from "./components/HomePage";
 import ProfileSettings from "./components/ProfileSettings";
@@ -42,15 +38,16 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const database = getDatabase();
-const testdb = getFirestore(app);
 const storage = getStorage(app);
 
 function App() {
   const [user, setUser] = useState({});
   const [db, setDb] = useState(database);
-  const [modalActive, setModalActive] = useState(false);
+  const [postModalActive, setPostModalActive] = useState(false);
+  const [followModalActive, setFollowModalActive] = useState(false);
+  const [followingClick, setFollowingClick] = useState(true);
+  
   const loggedIn = useRef(false);
   useEffect(() => {
     let database = getDatabase();
@@ -102,73 +99,69 @@ function App() {
   return (
     <div className="App" style={style}>
       <BrowserRouter>
-        <ModalContext.Provider value={modalActive}>
-          <SetModalContext.Provider value={setModalActive}>
-            <DbContext.Provider value={db}>
-              <UserContext.Provider value={user}>
-                <StoreContext.Provider value={storage}>
-                  <SetUserContext.Provider value={setUser}>
-                    <Routes>
-                      <Route
-                        path="/"
-                        element={
-                          user.uid ? (
-                            <>
-                              <Navigation />
-                              <HomePage />
-                            </>
-                          ) : (
-                            <>{<HomePageSignUp />}</>
-                          )
-                        }
-                      ></Route>
-                      <Route
-                        path="/settings"
-                        element={
-                          <>
-                            <Navigation />
-                            <ProfileSettings />
-                          </>
-                        }
-                      ></Route>
-                      <Route
-                        path="/profile"
-                        element={
-                          <>
-                            <Navigation />
-                            <MyProfile />
-                          </>
-                        }
-                      >
-                        <Route
-                          path=":pid"
-                          element={
-                            <>
-                              <Navigation />
-                              <MyProfile />
-                            </>
-                          }
-                        ></Route>
-                      </Route>
-                    </Routes>
-                    {/* {user.uid ? (
-                      <>
-                        <Navigation />
-                        <ProfileSettings />
-                        <MyProfile />
-                        <HomePage />
-                      </>
-                    ) : (
-                      <>
-                        <HomePageSignUp />
-                      </>
-                    )} */}
-                  </SetUserContext.Provider>
-                </StoreContext.Provider>
-              </UserContext.Provider>
-            </DbContext.Provider>
-          </SetModalContext.Provider>
-        </ModalContext.Provider>
+        <FollowingClickContext.Provider value={followingClick}>
+          <SetFollowingClickContext.Provider value={setFollowingClick}>
+            <FollowModalContext.Provider value={followModalActive}>
+              <SetFollowModalContext.Provider value={setFollowModalActive}>
+                <PostModalContext.Provider value={postModalActive}>
+                  <SetPostModalContext.Provider value={setPostModalActive}>
+                    <DbContext.Provider value={db}>
+                      <UserContext.Provider value={user}>
+                        <StoreContext.Provider value={storage}>
+                          <SetUserContext.Provider value={setUser}>
+                            <Routes>
+                              <Route
+                                path="/"
+                                element={
+                                  user.uid ? (
+                                    <>
+                                      <Navigation />
+                                      <HomePage />
+                                    </>
+                                  ) : (
+                                    <>{<HomePageSignUp />}</>
+                                  )
+                                }
+                              ></Route>
+                              <Route
+                                path="/settings"
+                                element={
+                                  <>
+                                    <Navigation />
+                                    <ProfileSettings />
+                                  </>
+                                }
+                              ></Route>
+                              <Route
+                                path="/profile"
+                                element={
+                                  <>
+                                    <Navigation />
+                                    <MyProfile />
+                                  </>
+                                }
+                              >
+                                <Route
+                                  path=":pid"
+                                  element={
+                                    <>
+                                      <Navigation />
+                                      <MyProfile />
+                                    </>
+                                  }
+                                ></Route>
+                              </Route>
+                            </Routes>
+                          </SetUserContext.Provider>
+                        </StoreContext.Provider>
+                      </UserContext.Provider>
+                    </DbContext.Provider>
+                  </SetPostModalContext.Provider>
+                </PostModalContext.Provider>
+              </SetFollowModalContext.Provider>
+            </FollowModalContext.Provider>
+          </SetFollowingClickContext.Provider>
+        </FollowingClickContext.Provider>
       </BrowserRouter>
     </div>
   );
