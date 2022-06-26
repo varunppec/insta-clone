@@ -14,7 +14,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { get, ref, set } from "firebase/database";
-import { Send as Send } from "@material-ui/icons";
+import {
+  Send as Send,
+  FavoriteBorder as Favorite,
+  CommentOutlined as Comment,
+} from "@material-ui/icons";
 import PostModal from "./PostModal";
 import FollowModal from "./FollowModal";
 const MyProfile = () => {
@@ -33,14 +37,14 @@ const MyProfile = () => {
   if (pid && Object.keys(profile).length === 0) {
     get(ref(db, `users/${pid}`)).then((snap) => {
       if (snap.val() === null || pid === localStorage.getItem("userid")) {
-        console.log('navigated')
+        console.log("navigated");
         navigate("/profile");
       } else setProfile(snap.val());
     });
   }
   useEffect(() => {
     if (!pid) setProfile({});
-  }, [pid])
+  }, [pid]);
   const user = Object.keys(profile).length ? profile : userContext;
   const followFunction = async () => {
     if (
@@ -170,8 +174,18 @@ const MyProfile = () => {
             {user.posts
               ? user.posts.map((x) => {
                   return (
-                    <div key={uniqid()}>
+                    <div key={uniqid()} onClick={() => navigate(`/posts/${user.uid}/${x.postLink}`)}>
                       <img src={x.url} alt=""></img>
+                      <div>
+                        <div>
+                          <Favorite />
+                          <div>{x.likes ? x.likes.length : 0}</div>
+                        </div>
+                        <div>
+                          <Comment />
+                          <div>{x.comments ? x.comments.length : 0}</div>
+                        </div>
+                      </div>
                     </div>
                   );
                 })

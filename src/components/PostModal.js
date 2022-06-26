@@ -35,13 +35,13 @@ const PostModal = () => {
 
     let data = await get(ref(db, `users/${userid}`));
     data = await data.val();
-    let oldPosts = data["posts"] === "" ? false : true;
+    let oldPosts = data.posts && data.posts.length ? true : false;
     if (oldPosts)
       data["posts"] = [
         ...data["posts"],
-        { url: val, caption, time: new Date().getTime() },
+        { url: val, caption, time: new Date().getTime(), postLink: uniqid()},
       ];
-    else data["posts"] = [{ url: val, caption, time: new Date().getTime() }];
+    else data["posts"] = [{ url: val, caption, time: new Date().getTime(), postLink: uniqid() }];
     await set(ref(db, `users/${userid}`), data);
     setUser(data);
     setModalActive(false);

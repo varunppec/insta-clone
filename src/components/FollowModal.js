@@ -158,26 +158,52 @@ const FollowModal = () => {
                 followingList.map((x) => {
                   if (x.uid === userContext.uid)
                     return (
-                      <div className="followingitems" key={uniqid()}>
+                      <div
+                        className="followingitems"
+                        key={uniqid()}
+                        onClick={(e) => {
+                          setFollowModalActive(false);
+                          navigate(`/profile/${x.uid}`);
+                        }}
+                      >
                         <img src={x.photo} alt=""></img>
                         <div>
                           <div>{x.name}</div>
                           <div>{x.uid}</div>
                         </div>
-                        <button onClick={() => navigate("/settings")}>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate("/settings");
+                          }}
+                        >
                           Edit Profile
                         </button>
                       </div>
                     );
                   else
                     return (
-                      <div className="followingitems" key={uniqid()}>
+                      <div
+                        className="followingitems"
+                        key={uniqid()}
+                        onClick={(e) => {
+                          setFollowModalActive(false);
+                          navigate(`/profile/${x.uid}`);
+                        }}
+                      >
                         <img src={x.photo} alt=""></img>
                         <div>
                           <div>{x.name}</div>
                           <div>{x.uid}</div>
                         </div>
-                        <button onClick={() => unFollow(x)}>Unfollow</button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            unFollow(x);
+                          }}
+                        >
+                          Unfollow
+                        </button>
                       </div>
                     );
                 })
@@ -191,20 +217,39 @@ const FollowModal = () => {
                 followerList.map((x) => {
                   if (x.uid === userContext.uid)
                     return (
-                      <div className="followingitems" key={uniqid()}>
+                      <div
+                        className="followingitems"
+                        key={uniqid()}
+                        onClick={(e) => {
+                          setFollowModalActive(false);
+                          navigate(`/profile/${x.uid}`);
+                        }}
+                      >
                         <img src={x.photo} alt=""></img>
                         <div>
                           <div>{x.name}</div>
                           <div>{x.uid}</div>
                         </div>
-                        <button onClick={() => navigate("/settings")}>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate("/settings");
+                          }}
+                        >
                           Edit Profile
                         </button>
                       </div>
                     );
                   else
                     return (
-                      <div className="followingitems" key={uniqid()}>
+                      <div
+                        className="followingitems"
+                        key={uniqid()}
+                        onClick={(e) => {
+                          setFollowModalActive(false);
+                          navigate(`/profile/${x.uid}`);
+                        }}
+                      >
                         <img src={x.photo} alt=""></img>
                         <div>
                           <div>{x.name}</div>
@@ -212,14 +257,33 @@ const FollowModal = () => {
                         </div>
                         {user.following ? (
                           user.following.includes(x.uid) ? (
-                            <button onClick={() => unFollow(x)}>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                unFollow(x);
+                              }}
+                            >
                               Unfollow
                             </button>
                           ) : (
-                            <button onClick={() => follow(x)}>Follow</button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                follow(x);
+                              }}
+                            >
+                              Follow
+                            </button>
                           )
                         ) : (
-                          <button onClick={() => follow(x)}>Follow</button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              follow(x);
+                            }}
+                          >
+                            Follow
+                          </button>
                         )}
                         {/* <button onClick={() => unFollow(x)}>Unfollow</button> */}
                       </div>

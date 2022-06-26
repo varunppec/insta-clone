@@ -18,11 +18,12 @@ import {
   FollowModalContext,
   SetFollowModalContext,
   SetFollowingClickContext,
-  FollowingClickContext
+  FollowingClickContext,
 } from "./components/Context";
 import HomePage from "./components/HomePage";
 import ProfileSettings from "./components/ProfileSettings";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Posts from "./components/Posts";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAheUFx9JHJ-oVLv9dKDHQRMFbv9wQrrm8",
@@ -47,7 +48,7 @@ function App() {
   const [postModalActive, setPostModalActive] = useState(false);
   const [followModalActive, setFollowModalActive] = useState(false);
   const [followingClick, setFollowingClick] = useState(true);
-  
+
   const loggedIn = useRef(false);
   useEffect(() => {
     let database = getDatabase();
@@ -133,6 +134,15 @@ function App() {
                                 }
                               ></Route>
                               <Route
+                                path="/posts/:uid/:pid"
+                                element={
+                                  <>
+                                    <Navigation />
+                                    <Posts />
+                                  </>
+                                }
+                              />
+                              <Route
                                 path="/profile"
                                 element={
                                   <>
@@ -151,6 +161,20 @@ function App() {
                                   }
                                 ></Route>
                               </Route>
+                              <Route
+                                path="*"
+                                element={<Navigate to="/"></Navigate>}
+                                // element={
+                                //   user.uid ? (
+                                //     <>
+                                //       <Navigation />
+                                //       <HomePage />
+                                //     </>
+                                //   ) : (
+                                //     <>{<HomePageSignUp />}</>
+                                //   )
+                                // }
+                              />
                             </Routes>
                           </SetUserContext.Provider>
                         </StoreContext.Provider>

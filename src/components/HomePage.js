@@ -18,6 +18,7 @@ import {
 
 import PostModal from "./PostModal";
 import FollowModal from "./FollowModal";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const postModalActive = useContext(PostModalContext);
@@ -26,6 +27,7 @@ const HomePage = () => {
   const followModalActive = useContext(FollowModalContext);
   const setFollowModalActive = useContext(SetFollowModalContext);
   const user = useContext(UserContext);
+  const navigate = useNavigate();
   let dbRef = {};
   const dbContext = useContext(DbContext);
   get(ref(dbContext, "users/")).then((val) => (dbRef = val.val()));
@@ -66,8 +68,8 @@ const HomePage = () => {
             <div>{user.followers.length ? user.followers.length : 0}</div>
             <div>Followers</div>
           </div>
-          <div className="posts">
-            <div>{user.posts.length ? user.posts.length: 0}</div>
+          <div className="posts" onClick={() => navigate("/profile")}>
+            <div>{user.posts && user.posts.length ? user.posts.length: 0}</div>
             <div>Posts</div>
           </div>
           <div
