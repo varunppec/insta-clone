@@ -6,7 +6,7 @@ import {
   CloudUploadOutlined as CloudUpload,
   CloseOutlined,
 } from "@material-ui/icons";
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import {
   DbContext,
   PostModalContext,
@@ -21,6 +21,7 @@ const PostModal = () => {
   const modalActive = useContext(PostModalContext);
   const setModalActive = useContext(SetPostModalContext);
   const db = useContext(DbContext);
+  const buttonRef = useRef();
   const uploadFile = async () => {
     const img = document.querySelector("#file");
     const caption = document.querySelector("#caption").value;
@@ -39,9 +40,12 @@ const PostModal = () => {
     if (oldPosts)
       data["posts"] = [
         ...data["posts"],
-        { url: val, caption, time: new Date().getTime(), postLink: uniqid()},
+        { url: val, caption, time: new Date().getTime(), postLink: uniqid() },
       ];
-    else data["posts"] = [{ url: val, caption, time: new Date().getTime(), postLink: uniqid() }];
+    else
+      data["posts"] = [
+        { url: val, caption, time: new Date().getTime(), postLink: uniqid() },
+      ];
     await set(ref(db, `users/${userid}`), data);
     setUser(data);
     setModalActive(false);
@@ -103,7 +107,13 @@ const PostModal = () => {
                 id="caption"
               ></textarea>
             </div>
-            <button id="postbutton" onClick={() => uploadFile()}>
+            <button
+              id="postbutton"
+              onClick={() => {
+                if (buttonRef.current) buttonRef.current.setAttribute("disabled", "disabled");
+                uploadFile();
+              }}
+            >
               Post
             </button>
           </div>

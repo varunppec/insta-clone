@@ -8,10 +8,50 @@ import {
 import { get, ref, set } from "firebase/database";
 import { useState } from "react";
 import { useContext } from "react";
-import { SetUserContext, UserContext, DbContext } from "./Context";
+import {
+  SetUserContext,
+  UserContext,
+  DbContext,
+  SetPostDataContext,
+} from "./Context";
 import uniqid from "uniqid";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import CopyToClipboard from "react-copy-to-clipboard";
+
+const getTimeDiff = (postTime) => {
+  let time = new Date().getTime() - postTime;
+  let test = 0;
+  test = Math.floor(time / (1000 * 60 * 60 * 24 * 7 * 4 * 12));
+  if (test !== 0) {
+    return test === 1 ? `${test} YEAR AGO` : `${test} YEARS AGO`;
+  }
+  test = Math.floor(time / (1000 * 60 * 60 * 24 * 7 * 4));
+  if (test !== 0) {
+    return test === 1 ? `${test} MONTH AGO` : `${test} MONTHS AGO`;
+  }
+  test = Math.floor(time / (1000 * 60 * 60 * 24 * 7));
+  if (test !== 0) {
+    return test === 1 ? `${test} WEEK AGO` : `${test} WEEKS AGO`;
+  }
+  test = Math.floor(time / (1000 * 60 * 60 * 24));
+  if (test !== 0) {
+    return test === 1 ? `${test} DAY AGO` : `${test} DAYS AGO`;
+  }
+  test = Math.floor(time / (1000 * 60 * 60));
+  if (test !== 0) {
+    return test === 1 ? `${test} HOUR AGO` : `${test} HOURS AGO`;
+  }
+  test = Math.floor(time / (1000 * 60));
+  if (test !== 0) {
+    return test === 1 ? `${test} MINUTE AGO` : `${test} MINUTES AGO`;
+  }
+  test = Math.floor(time / 1000);
+  if (test !== 0) {
+    return test === 1 ? `${test} SECOND AGO` : `${test} SECONDS AGO`;
+  }
+  return `JUST NOW`;
+};
 
 const Posts = () => {
   const db = useContext(DbContext);
@@ -21,16 +61,12 @@ const Posts = () => {
   const [profile, setProfile] = useState({});
   const { uid, pid } = useParams();
   const navigate = useNavigate();
-  console.log(uid, pid);
   const [emptyVal, setEmptyVal] = useState("");
-  console.log("rerendered");
+  const setPostData = useContext(SetPostDataContext);
 
   useEffect(() => {
     get(ref(db, `users/${uid}/posts/`))
-      .then((snap) =>
-        // console.log(snap.val())
-        snap.val()
-      )
+      .then((snap) => snap.val())
       .then((x) => {
         x.forEach(async (ele) => {
           if (ele.postLink === pid && profile.uid !== uid) {
@@ -44,6 +80,40 @@ const Posts = () => {
         });
       });
   }, []);
+
+  const getPostData = async () => {
+    let arr = [];
+
+    for (let x of userContext.following) {
+      let data = await (await get(ref(db, `users/${x}/`))).val();
+      if (data.posts && data.posts.length) {
+        for (let y of data.posts) {
+          y.photo = data.photo;
+          y.name = data.name;
+          y.uid = data.uid;
+          arr.push(y);
+        }
+      }
+    }
+    userContext.posts.forEach((x) => {
+      x.photo = userContext.photo;
+      x.name = userContext.name;
+      x.uid = userContext.uid;
+      arr.push(x);
+    });
+    arr.sort((a, b) => (a.time < b.time ? 1 : -1));
+    console.log("here 3");
+    setPostData(arr);
+  };
+  const shareClicked = () => {
+    const element = document.querySelector(".sharetooltiptext");
+    element.style.opacity = 1;
+    element.style.visibility = "visible";
+    setInterval(() => {
+      element.style.opacity = 0;
+      element.style.visibility = "hidden";
+    }, 3000);
+  };
 
   const favClicked = async () => {
     let data = await (await get(ref(db, `users/${profile.uid}`))).val();
@@ -60,6 +130,8 @@ const Posts = () => {
     });
     data.posts[ind] = post;
     await set(ref(db, `users/${profile.uid}`), data);
+    await getPostData();
+    if (profile.uid === userContext.uid) setUserContext(data);
     setProfile(data);
   };
   const submitComment = async () => {
@@ -100,13 +172,13 @@ const Posts = () => {
     });
     data.posts[ind] = post;
     await set(ref(db, `users/${profile.uid}`), data);
+    if (profile.uid === userContext.uid) setUserContext(data);
     setProfile(data);
     setEmptyVal("");
   };
 
   const enablePostButton = (e) => {
     const post = document.querySelector("#post");
-    console.log(e.target.value ? true : false);
     if (e.target.value) {
       post.removeAttribute("disabled");
       post.classList.remove("disabled");
@@ -115,40 +187,6 @@ const Posts = () => {
       post.setAttribute("disabled", "");
       post.classList.add("disabled");
     }
-  };
-
-  const getTimeDiff = (postTime) => {
-    let time = new Date().getTime() - postTime;
-    let test = 0;
-    test = Math.floor(time / (1000 * 60 * 60 * 24 * 7 * 4 * 12));
-    if (test !== 0) {
-      return test === 1 ? `${test} YEAR AGO` : `${test} YEARS AGO`;
-    }
-    test = Math.floor(time / (1000 * 60 * 60 * 24 * 7 * 4));
-    if (test !== 0) {
-      return test === 1 ? `${test} MONTH AGO` : `${test} MONTHS AGO`;
-    }
-    test = Math.floor(time / (1000 * 60 * 60 * 24 * 7));
-    if (test !== 0) {
-      return test === 1 ? `${test} WEEK AGO` : `${test} WEEKS AGO`;
-    }
-    test = Math.floor(time / (1000 * 60 * 60 * 24));
-    if (test !== 0) {
-      return test === 1 ? `${test} DAY AGO` : `${test} DAYS AGO`;
-    }
-    test = Math.floor(time / (1000 * 60 * 60));
-    if (test !== 0) {
-      return test === 1 ? `${test} HOUR AGO` : `${test} HOURS AGO`;
-    }
-    test = Math.floor(time / (1000 * 60));
-    if (test !== 0) {
-      return test === 1 ? `${test} MINUTE AGO` : `${test} MINUTES AGO`;
-    }
-    test = Math.floor(time / 1000);
-    if (test !== 0) {
-      return test === 1 ? `${test} SECOND AGO` : `${test} SECONDS AGO`;
-    }
-    return `JUST NOW`;
   };
 
   const getCommentTimeDiff = (commTime) => {
@@ -244,7 +282,6 @@ const Posts = () => {
               ) : (
                 <Favorite onClick={favClicked} />
               )}
-              {/* <Favorite onClick={favClicked} /> */}
               <Comment
                 onClick={() => {
                   const id = document.querySelector("#comment");
@@ -252,7 +289,22 @@ const Posts = () => {
                   id.focus();
                 }}
               />
-              <Share />
+              <div className="sharetooltip">
+                <CopyToClipboard
+                  text={
+                    window.location.href +
+                    "posts/" +
+                    profile.uid +
+                    "/" +
+                    post.postLink
+                  }
+                >
+                  <Share onClick={() => shareClicked()}></Share>
+                </CopyToClipboard>
+                <div className={"sharetooltiptext sharetooltiptext"}>
+                  Copied to clickboard
+                </div>
+              </div>
             </div>
             <div className="postextrainfo">
               <div>{post.likes ? post.likes.length : 0} likes</div>
@@ -278,4 +330,5 @@ const Posts = () => {
   else return <div>Loading</div>;
 };
 
-export default Posts;
+export { Posts };
+export { getTimeDiff };

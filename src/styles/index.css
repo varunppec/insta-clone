@@ -153,8 +153,13 @@ nav {
 }
 
 .homepageholder {
-    display: grid;
-    grid-template-columns: 4fr 2fr;
+    display: flex;
+    gap: 50px;
+    justify-content: center;
+}
+
+.homepageholder > div:last-child {
+    width: 250px;
 }
 
 .userinfoholder {
@@ -175,6 +180,7 @@ nav {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    gap: 2px;
 }
 .userinfo > div:first-child {
     font-size: 1.6rem;
@@ -962,4 +968,268 @@ nav {
 .postbuttons > .favclicked {
     fill: rgba(255, 0, 0, 0.8);
 }
+
+.homepagegrid {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    align-items: center;
+    gap: 70px;
+}
+
+.homepagepost {
+    width: 100%;
+    height: 700px;
+    box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.homepagepost > div:first-child {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 15px;
+}
+.homepagepost > div:first-child > img {
+    border-radius: 50%;
+}
+.homepagepost > div:first-child > svg {
+    margin-left: auto;
+}
+.hppagepostuploadinfo {
+    font-weight: bold;
+}
+.hppagepostuploadinfo > div:last-child {
+    font-weight: normal;
+    font-size: 0.9rem;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.homepagepost > img {
+    width: 100%;
+    height: 70%;
+}
+.homepagepost  > .postbuttons {
+    margin: 5px 10px 0px 10px;
+}
+
+.homepagepost > .postextrainfo {
+    margin: 0px 10px;
+}
+
+.homepagepost > .addcomment {
+    margin: 5px 10px;
+}
+
+.somecomments {
+    display: flex;
+    flex-direction: column;
+    margin: 0px 10px;
+    gap: 2px;
+}
+
+.somecomments > div {
+    display: flex;
+    gap: 5px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.somecomments > div > div:last-child {
+    font-weight: normal;
+}
+
+.homepagepost > .postextrainfo > div {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: black;
+}
+
+.posttimeupload {
+    margin: 5px 10px;
+    font-size: 0.8rem;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.hppostcaption {
+    margin: 0px 10px;
+    display: flex;
+    gap: 5px;
+    font-size: 0.9rem;
+}
+
+.hppostcaption > div:first-child {
+    font-weight: bold;
+}
+
+.viewcomments {
+    margin: 5px 10px;
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 0.9rem;
+}
+.sharetooltip {
+    margin-left: auto;
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px solid dotted black;
+}
+.sharetooltiptext {
+    visibility: hidden;
+    position: absolute;
+    width: 120px;
+    background-color: white;
+    color: black;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s;
+    top: 100%;
+    left: -200%;
+    box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.5);
+}
+.sharetooltip > svg:hover {
+    opacity: 70%;
+}
+
+.sharetooltiptext::after {
+    content: "";
+    position: absolute;
+    top: -20%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent rgba(0, 0, 0, 0.5) transparent;
+}
+
+.viewprofile {
+    visibility: hidden;
+    opacity: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 10px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.viewprofile > div {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+.viewprofile > div > button {
+    border: 1px solid black;
+    border-radius: 100px;
+    /* padding: 10px; */
+    font-weight: bold;
+    font-size: 1rem;
+    min-height: 50px;
+    min-width: 150px;
+    background-color: white;
+    box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.1);
+    align-self: center;
+}
+
+.viewprofile > div > button:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+}
+
+.viewprofile > svg {
+    z-index: 5;
+    margin-left: auto;
+    margin-right: 10px;
+    margin-top: 10px;
+    font-size: 2rem;
+    
+}
+
+.searchmenu {
+    position: relative;
+    display: inline-block;
+}
+
+.menuitems {
+    position: absolute;
+    width: 94%;
+    background-color: white;
+    color: black;
+    border-radius: 5px;
+    z-index: 1;
+    opacity: 1;
+    transition: opacity 0.3s;
+    top: 130%;
+    left: 0%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 5px;
+    /* padding: 10px 10px; */
+    /* box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5); */
+}
+
+.menubox {
+    position: absolute;
+    box-shadow: 0 0 5px 1px rgba(0,0,0, .0975);
+    width: 94%;
+    top: 130%;
+    left: 0%;
+    display: flex;
+    justify-content: center;
+}
+.navarrow {
+    background-color: white;
+    /* top: 0; */
+    bottom: -75%;
+    left: 45%;
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    transform: rotate(45deg);
+    box-shadow: 0 0 5px 1px rgba(0,0,0, .0975);
+}
+
+
+.menuitems > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    gap: 5px;
+    min-height: 40px;
+    border-radius: 5px;
+    padding: 0px 5px;
+}
+.menuitems > div:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.menuitems > div > div > img {
+    border-radius: 50%;
+    height: 33px;
+    width: 33px;
+}
+
+.menuitems > div > div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: bold;
+}
+.menuitems > div > div:last-child {
+    color: rgba(0, 0, 0, 0.5);
+    font-weight: normal;
+}
+
+
 

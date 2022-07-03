@@ -1,6 +1,7 @@
 import { get, ref, once, set } from "firebase/database";
 import { useContext } from "react";
 import uniqid from "uniqid";
+import HomePagePosts from "../HomePagePosts";
 import {
   DbContext,
   UserContext,
@@ -36,7 +37,7 @@ const HomePage = () => {
     <div className="homepageholder">
       {postModalActive ? <PostModal /> : null}
       {followModalActive ? <FollowModal /> : null}
-      <div></div>
+      <HomePagePosts />
       <div>
         <div className="userinfoholder">
           <div>
@@ -69,7 +70,7 @@ const HomePage = () => {
             <div>Followers</div>
           </div>
           <div className="posts" onClick={() => navigate("/profile")}>
-            <div>{user.posts && user.posts.length ? user.posts.length: 0}</div>
+            <div>{user.posts && user.posts.length ? user.posts.length : 0}</div>
             <div>Posts</div>
           </div>
           <div

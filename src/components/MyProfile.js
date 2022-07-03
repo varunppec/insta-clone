@@ -34,14 +34,18 @@ const MyProfile = () => {
   const { pid } = useParams();
   console.log(pid);
   const userContext = useContext(UserContext);
-  if (pid && Object.keys(profile).length === 0) {
-    get(ref(db, `users/${pid}`)).then((snap) => {
-      if (snap.val() === null || pid === localStorage.getItem("userid")) {
-        console.log("navigated");
-        navigate("/profile");
-      } else setProfile(snap.val());
-    });
-  }
+
+  useEffect(() => {
+    if (pid) {
+      get(ref(db, `users/${pid}`)).then((snap) => {
+        if (snap.val() === null || pid === localStorage.getItem("userid")) {
+          console.log("navigated");
+          navigate("/profile");
+        } else setProfile(snap.val());
+      });
+    }
+  }, [pid]);
+
   useEffect(() => {
     if (!pid) setProfile({});
   }, [pid]);
@@ -174,7 +178,12 @@ const MyProfile = () => {
             {user.posts
               ? user.posts.map((x) => {
                   return (
-                    <div key={uniqid()} onClick={() => navigate(`/posts/${user.uid}/${x.postLink}`)}>
+                    <div
+                      key={uniqid()}
+                      onClick={() =>
+                        navigate(`/posts/${user.uid}/${x.postLink}`)
+                      }
+                    >
                       <img src={x.url} alt=""></img>
                       <div>
                         <div>

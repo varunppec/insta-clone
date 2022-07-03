@@ -10,4 +10,5 @@ export const FollowModalContext = createContext();
 export const SetFollowModalContext = createContext();
 export const FollowingClickContext= createContext();
 export const SetFollowingClickContext = createContext();
-
+export const SetPostDataContext = createContext();
+export const PostDataContext = createContext();

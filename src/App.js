@@ -19,11 +19,13 @@ import {
   SetFollowModalContext,
   SetFollowingClickContext,
   FollowingClickContext,
+  PostDataContext,
+  SetPostDataContext,
 } from "./components/Context";
 import HomePage from "./components/HomePage";
 import ProfileSettings from "./components/ProfileSettings";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Posts from "./components/Posts";
+import { Posts } from "./components/Posts";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAheUFx9JHJ-oVLv9dKDHQRMFbv9wQrrm8",
@@ -48,8 +50,9 @@ function App() {
   const [postModalActive, setPostModalActive] = useState(false);
   const [followModalActive, setFollowModalActive] = useState(false);
   const [followingClick, setFollowingClick] = useState(true);
-
+  const [postData, setPostData] = useState({});
   const loggedIn = useRef(false);
+  
   useEffect(() => {
     let database = getDatabase();
     setDb(database);
@@ -109,74 +112,78 @@ function App() {
                     <DbContext.Provider value={db}>
                       <UserContext.Provider value={user}>
                         <StoreContext.Provider value={storage}>
-                          <SetUserContext.Provider value={setUser}>
-                            <Routes>
-                              <Route
-                                path="/"
-                                element={
-                                  user.uid ? (
-                                    <>
-                                      <Navigation />
-                                      <HomePage />
-                                    </>
-                                  ) : (
-                                    <>{<HomePageSignUp />}</>
-                                  )
-                                }
-                              ></Route>
-                              <Route
-                                path="/settings"
-                                element={
-                                  <>
-                                    <Navigation />
-                                    <ProfileSettings />
-                                  </>
-                                }
-                              ></Route>
-                              <Route
-                                path="/posts/:uid/:pid"
-                                element={
-                                  <>
-                                    <Navigation />
-                                    <Posts />
-                                  </>
-                                }
-                              />
-                              <Route
-                                path="/profile"
-                                element={
-                                  <>
-                                    <Navigation />
-                                    <MyProfile />
-                                  </>
-                                }
-                              >
-                                <Route
-                                  path=":pid"
-                                  element={
-                                    <>
-                                      <Navigation />
-                                      <MyProfile />
-                                    </>
-                                  }
-                                ></Route>
-                              </Route>
-                              <Route
-                                path="*"
-                                element={<Navigate to="/"></Navigate>}
-                                // element={
-                                //   user.uid ? (
-                                //     <>
-                                //       <Navigation />
-                                //       <HomePage />
-                                //     </>
-                                //   ) : (
-                                //     <>{<HomePageSignUp />}</>
-                                //   )
-                                // }
-                              />
-                            </Routes>
-                          </SetUserContext.Provider>
+                          <PostDataContext.Provider value={postData}>
+                            <SetPostDataContext.Provider value={setPostData}>
+                              <SetUserContext.Provider value={setUser}>
+                                <Routes>
+                                  <Route
+                                    path="/"
+                                    element={
+                                      user.uid ? (
+                                        <>
+                                          <Navigation />
+                                          <HomePage />
+                                        </>
+                                      ) : (
+                                        <>{<HomePageSignUp />}</>
+                                      )
+                                    }
+                                  ></Route>
+                                  <Route
+                                    path="/settings"
+                                    element={
+                                      <>
+                                        <Navigation />
+                                        <ProfileSettings />
+                                      </>
+                                    }
+                                  ></Route>
+                                  <Route
+                                    path="/posts/:uid/:pid"
+                                    element={
+                                      <>
+                                        <Navigation />
+                                        <Posts />
+                                      </>
+                                    }
+                                  />
+                                  <Route
+                                    path="/profile"
+                                    element={
+                                      <>
+                                        <Navigation />
+                                        <MyProfile />
+                                      </>
+                                    }
+                                  >
+                                    <Route
+                                      path=":pid"
+                                      element={
+                                        <>
+                                          <Navigation />
+                                          <MyProfile />
+                                        </>
+                                      }
+                                    ></Route>
+                                  </Route>
+                                  <Route
+                                    path="*"
+                                    element={<Navigate to="/"></Navigate>}
+                                    // element={
+                                    //   user.uid ? (
+                                    //     <>
+                                    //       <Navigation />
+                                    //       <HomePage />
+                                    //     </>
+                                    //   ) : (
+                                    //     <>{<HomePageSignUp />}</>
+                                    //   )
+                                    // }
+                                  />
+                                </Routes>
+                              </SetUserContext.Provider>
+                            </SetPostDataContext.Provider>
+                          </PostDataContext.Provider>
                         </StoreContext.Provider>
                       </UserContext.Provider>
                     </DbContext.Provider>
