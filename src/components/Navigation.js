@@ -11,6 +11,7 @@ import { useState } from "react";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { DbContext, UserContext } from "./Context";
+import uniqid from "uniqid";
 const Navigation = () => {
   const navigate = useNavigate();
   const db = useContext(DbContext);
@@ -78,48 +79,65 @@ const Navigation = () => {
           onInput={(e) => {
             searchProfile(e);
           }}
-          // onBlur={() => setSearchItems({})}
+          onBlur={() => setSearchItems({})}
           type="text"
           placeholder="Search"
         />
 
         {searchItems.length ? (
           <>
-            <div className="navarrow"></div>
-            <div className="menubox"></div>
-            <div
-              className="menuitems"
-              onLoad={() => {
-                console.log("loaded");
-              }}
-            >
-              {searchItems
-                .filter((x, index) => index < 5)
-                .map((x) => {
-                  return (
-                    <div onClick={() => navigate(`/profile/${x.uid}`)}>
-                      <div>
-                        <img
-                          src={x.photo}
-                          width="25px"
-                          height="25px"
-                          alt=""
-                        ></img>
-                        <div>{x.name}</div>
+            <div className="menubox">
+              <div className="navarrow"></div>
+              <div
+                className="menuitems"
+                onLoad={() => {
+                  console.log("loaded");
+                }}
+              >
+                {searchItems
+                  .filter((x, index) => index < 5)
+                  .map((x) => {
+                    return (
+                      <div
+                        key={uniqid()}
+                        onClick={() => navigate(`/profile/${x.uid}`)}
+                      >
+                        <div>
+                          <img
+                            src={x.photo}
+                            width="25px"
+                            height="25px"
+                            alt=""
+                          ></img>
+                          <div>{x.name}</div>
+                        </div>
+                        <div>@{x.uid}</div>
                       </div>
-                      <div>@{x.uid}</div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+              </div>
             </div>
           </>
         ) : null}
       </div>
       <div className="navicons">
-        <HomeOutlined onClick={() => navigate("/")}></HomeOutlined>
-        <InboxOutlined></InboxOutlined>
+        <HomeOutlined
+          className={window.location.pathname === "/" ? "iconactive" : ""}
+          onClick={() => navigate("/")}
+        ></HomeOutlined>
+        <InboxOutlined
+          className={
+            window.location.pathname === "/messages" ? "iconactive" : ""
+          }
+          onClick={() => navigate("/messages")}
+        ></InboxOutlined>
         <Favorite></Favorite>
-        <Person onClick={() => navigate("/profile")}></Person>
+        <Person
+          className={
+            window.location.pathname === "/profile" ? "iconactive" : ""
+          }
+          onClick={() => navigate("/profile")}
+        ></Person>
       </div>
     </nav>
   );

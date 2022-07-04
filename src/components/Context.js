@@ -12,3 +12,7 @@ export const FollowingClickContext= createContext();
 export const SetFollowingClickContext = createContext();
 export const SetPostDataContext = createContext();
 export const PostDataContext = createContext();
+export const MessageModalContext = createContext();
+export const SetMessageModalContext = createContext();
+export const ActiveConvoContext = createContext();
+export const SetActiveConvoContext = createContext();

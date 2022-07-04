@@ -26,6 +26,7 @@ import HomePage from "./components/HomePage";
 import ProfileSettings from "./components/ProfileSettings";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Posts } from "./components/Posts";
+import Messages from "./components/Messages";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAheUFx9JHJ-oVLv9dKDHQRMFbv9wQrrm8",
@@ -135,6 +136,15 @@ function App() {
                                       <>
                                         <Navigation />
                                         <ProfileSettings />
+                                      </>
+                                    }
+                                  ></Route>
+                                  <Route
+                                    path="/messages"
+                                    element={
+                                      <>
+                                        <Navigation />
+                                        <Messages />
                                       </>
                                     }
                                   ></Route>
