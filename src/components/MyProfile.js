@@ -32,14 +32,12 @@ const MyProfile = () => {
   const setUser = useContext(SetUserContext);
   const db = useContext(DbContext);
   const { pid } = useParams();
-  console.log(pid);
   const userContext = useContext(UserContext);
 
   useEffect(() => {
     if (pid) {
       get(ref(db, `users/${pid}`)).then((snap) => {
         if (snap.val() === null || pid === localStorage.getItem("userid")) {
-          console.log("navigated");
           navigate("/profile");
         } else setProfile(snap.val());
       });
@@ -180,9 +178,9 @@ const MyProfile = () => {
                   return (
                     <div
                       key={uniqid()}
-                      onClick={() =>
-                        navigate(`/posts/${user.uid}/${x.postLink}`)
-                      }
+                      onClick={() => {
+                        navigate(`/posts/${user.uid}/${x.postLink}`);
+                      }}
                     >
                       <img src={x.url} alt=""></img>
                       <div>

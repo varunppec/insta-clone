@@ -16,3 +16,5 @@ export const MessageModalContext = createContext();
 export const SetMessageModalContext = createContext();
 export const ActiveConvoContext = createContext();
 export const SetActiveConvoContext = createContext();
+export const ThemeContext = createContext();
+export const SetThemeContext = createContext();

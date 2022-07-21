@@ -1,17 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Cookie&family=Roboto:wght@500&display=swap');
+import { createGlobalStyle } from "styled-components";
+
+export const GlobalStyles = createGlobalStyle`
+@import url('https://fonts.googleapis.com/css2?family=Cookie&display=swap');
 html, body {
     margin: 0;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
-
 nav {
     display: flex;
     justify-content: space-around;
     width: 100%;
     min-height: 55px;
     align-items: center;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
-    background-color: white;
+    box-shadow: 0 1px 5px ${({theme}) => theme.boxShadowColor};
+    background-color: ${({theme}) => theme.bgColor};
     position: sticky;
     top: 0;
     margin-bottom: 15px;
@@ -21,7 +23,7 @@ nav {
 .navhead, .signuphead {
     font-family: 'Cookie', cursive;
     font-size: 2.7rem;
-    color: black;
+    color: ${({theme}) => theme.textColor};
 }
 
 .navinput > input{
@@ -29,8 +31,8 @@ nav {
     min-width: 200px;
     width: 50%;
     padding: 0 10px;
-    background-color: rgba(0, 0, 0, 0.075);
-    border: 1px solid rgba(0, 0, 0, 0.075);;
+    background-color: rgba(0, 0, 0, 0.075); //here
+    border: 1px solid rgba(0, 0, 0, 0.075); //here
     border-radius: 5px;
     outline: none;
 }
@@ -46,43 +48,42 @@ nav {
     z-index: 1;
 }
 
-.navicons > svg, .navicons > div > svg {
+.navicons > svg {
     font-size: 1.8rem;
     fill: none;
     stroke-width: 1.4px;
-    stroke: black; 
+    stroke: ${({theme}) => theme.textColor};
     z-index: 1;
 }
 .navicons > svg:nth-child(2) {
     font-size: 1.6rem;
 }
-.navicons > svg:hover, .navicons > div > svg:hover {
-    fill:black;
-}
+.navicons > svg:hover {
+    fill:${({theme}) => theme.textColor};
 
-.navicons > .iconactive, .navicons > div > .iconactive {
-    fill: black;
+.navicons > .iconactive {
+    fill: ${({theme}) => theme.textColor};
 }
 .signupinputs > * {
     margin: 2px;
 }
 
 .errormessage {
-    color: rgba(0, 0, 0, 0.4);
+    color: rgba(0, 0, 0, 0.4); //here
     font-size: 0.7rem;
 }
 
 .supinputs {
     display: flex;
-    border: 1px solid rgba(0, 0, 0, 0.308);
+    border: 1px solid rgba(0, 0, 0, 0.308); //here
     border-radius: 50px;
     width: fit-content;
     padding: 5px 0;
 }
 
 .supinputs > div {
-    border-right: 1px solid rgba(0, 0, 0, 0.308);
-    color: rgba(0, 0, 0, 0.308);
+    border-right: 1px solid rgba(0, 0, 0, 0.308); //here
+    color: rgba(0, 0, 0, 0.308); //here
     padding: 0 5px;
 }
 .supinputs > input {
@@ -98,19 +99,19 @@ nav {
 }
 .signupor>div:first-child, .signupor>div:last-child {
     height: 2px;
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: ${({theme}) => theme.borderColor};
     flex:1;
 }
 .signupor>div:nth-child(2) {
     margin: 0 20px;
-    color: rgba(0, 0, 0, 0.401);
+    color: ${({theme}) => theme.borderColor};
     font-weight: bold;
     font-size: 0.95rem;
 }
 
 .signupform>div>button {
-    background-color: rgba(0, 68, 255, 1);
-    color: white;
+    background-color: ${({theme}) => theme.blueButtonColor};
+    color: ${({theme}) => theme.textColor};;
     min-width: 250px;
     border: none;
     border-radius: 5px;
@@ -133,8 +134,8 @@ nav {
     margin-top: 100px;
     width: fit-content;
     padding: 30px 50px;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
-    color:rgba(0, 0, 0, 0.4);
+    box-shadow: 0 1px 5px ${({theme}) => theme.boxShadowColor};
+    color:${({theme}) => theme.secTextColor};
 }
 
 .logindiv {
@@ -152,7 +153,7 @@ nav {
 
 .login > div {
     text-decoration: none;
-    color: rgb(0, 68, 255);
+    color: ${({theme}) => theme.blueButtonColor};
 }
 
 .login > div:hover {
@@ -197,7 +198,7 @@ nav {
     font-size: 1.6rem;
 }
 .userinfo > div:last-child {
-    color: rgba(0, 0, 0, 0.4);
+    color: ${({theme}) => theme.secTextColor};
 }
 .userinfo > div:last-child::before {
     content: "@";
@@ -212,7 +213,7 @@ nav {
 
 .userstats > div > div:last-child {
     font-size: 0.8rem;
-    color: rgba(0,0,0,0.4);
+    color: ${({theme}) => theme.secTextColor};
     margin-top: 3px;
 }
 
@@ -232,7 +233,7 @@ nav {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: ${({theme}) => theme.modalBgColor};
     display: flex;
     justify-content: center;
     align-items: center;
@@ -240,7 +241,7 @@ nav {
 }
 
 .fileuploadholder {
-    background-color: white;
+    background-color: ${({theme}) => theme.bgColor};
     width: 50%;
     height: 80%;
     border-radius: 8px;
@@ -255,7 +256,7 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: rgba(0, 0, 0, 0.5);
+    color: ${({theme}) => theme.secTextColor};
     padding-bottom: 15px;
     border-bottom: 2px solid rgba(0, 0, 0, 0.2);
 }
@@ -282,16 +283,16 @@ nav {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: 1px solid rgba(0, 0, 0, 0.2);
+    border: 1px solid ${({theme}) => theme.borderColor};
     position: relative;
     font-size: .8rem;
-    color: rgba(0, 0, 0, 0.4);
+    color: ${({theme}) => theme.secTextColor};
 }
 
 .fileupload > div > svg {
     position: relative;
     font-size: 10rem;
-    fill: rgba(0, 0, 0, 0.9);
+    fill: ${({theme}) => theme.textColor};
 }
 
 .fileupload > div > input {
@@ -302,8 +303,8 @@ nav {
     opacity: 0%;
 }
 .fileupload > div:first-child:hover {
-    border: 1px solid rgba(0, 0, 0, 0.39);
-    background-color: rgba(0, 0, 0, 0.02);
+    border: 1px solid ${({theme}) => theme.hoverColor};
+    background-color: ${({theme}) => theme.hoverBgColor};
 } 
 
 .fileupload > div > textarea {
@@ -311,13 +312,13 @@ nav {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     padding: 10px;
     scrollbar-width: none;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid ${({theme}) => theme.borderColor};
     /* outline: 1px solid rgba(0, 0, 0, 0.01);; */
 }
 
 .fileupload > div > textarea:focus, .fileupload > div > textarea:hover {
     border: none;
-    outline: 1px solid rgba(0, 0, 0, 0.2);
+    outline: 1px solid ${({theme}) => theme.borderColor};
 }
 
 #fileinputholder {
@@ -334,13 +335,13 @@ nav {
     min-height: 35px;
     border: none;
     border-radius: 50px;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.9);
+    color: ${({theme}) => theme.textColor};
+    background-color: ${({theme}) => theme.bgColor};
     font-weight: bold;
 }
 
 .obj {
-    background-color: white;
+    background-color: ${({theme}) => theme.bgColor};;
 }
 
 .profileppholder > img {
@@ -381,8 +382,8 @@ nav {
     font-size: 1rem;
     min-height: 50px;
     min-width: 150px;
-    background-color: white;
-    box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.1);
+    background-color: ${({theme}) => theme.bgColor};
+    box-shadow: 0 0 20px 1px ${({theme}) => theme.boxShadowColor};
 }
 
 .profbuttons > button:last-child {
@@ -391,8 +392,8 @@ nav {
     border-radius: 50%;
     min-width: 50px;
     min-height: 50px;
-    background-color: white;
-    box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.1);
+    background-color: ${({theme}) => theme.bgColor};;
+    box-shadow: 0 0 20px 1px ${({theme}) => theme.boxShadowColor};
 }
 
 .profiledetails {
@@ -406,13 +407,13 @@ nav {
     margin-left: 50px;
 }
 .basedetails {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid ${({theme}) => theme.borderColor};
 }
 .basedetails > div:first-child{
     font-size: 2rem;
 }
 .basedetails > div:nth-child(2) {
-    color: rgba(0, 0, 0, 0.5);
+    color: ${({theme}) => theme.secTextColor};
     font-size: 1.4rem;
 }
 .basedetails > div:nth-child(2)::before {
@@ -431,14 +432,13 @@ nav {
     font-size: 1.2rem;
 }
 .basedetails > div:last-child > p {
-    color: rgba(0, 0, 0, 0.5);
-}
+    color: ${({theme}) => theme.secTextColor};
 
 .followinfo {
     margin-top: 15px;
     display: flex;
     gap: 40px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid ${({theme}) => theme.borderColor};
     justify-content: flex-start;
 }
 
@@ -457,7 +457,7 @@ nav {
 }
 
 .followinfo > div > div {
-    color: rgba(0, 0, 0, 0.5);
+    color: ${({theme}) => theme.secTextColor};
 }
 
 .bio > h3 {
@@ -499,13 +499,13 @@ nav {
 }
 .postgrid > div > div > div > * {
     font-size: 2rem;
-    fill: rgba(255,255,255,0.9);
-    color: rgba(255,255,255,0.9);
+    fill: ${({theme}) => theme.textColor};
+    color: ${({theme}) => theme.textColor};
 }
 
 .postgrid > div > div:hover {
     opacity: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: ${({theme}) => theme.secTextColor};
 }
 
 .postgrid > div > img {
@@ -546,13 +546,13 @@ nav {
     justify-content: flex-end;
 }
 .overlay > .MuiSvgIcon-root {
-    fill: white;
+    fill: ${({theme}) => theme.textColor};
     margin-right: 8px;
     margin-top: 8px;
     opacity: 0;
 }
 .ppholder:hover .overlay, .photoholder:hover .overlay {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: ${({theme}) => theme.secTextColor};
 }
 
 .ppholder:hover .overlay > * , .photoholder:hover .overlay > *{
@@ -624,7 +624,7 @@ nav {
 .disname, .disbio {
     display: flex;
     flex-direction: column;
-    color: rgba(0, 0, 0, 0.5);
+    color: ${({theme}) => theme.secTextColor};
     font-size: 0.8rem;
     min-width: 80%;
     justify-content: center;
@@ -640,7 +640,7 @@ nav {
     width: 90%;
     outline: none;
     border-radius: 50px;
-    border: 1px solid rgba(0, 0, 0, 0.5);
+    border: 1px solid ${({theme}) => theme.secTextColor};
     min-height: 28px;
     padding-left: 10px;
 }
@@ -650,7 +650,7 @@ nav {
     resize: none;
     outline: none;
     border-radius: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.5);
+    border: 1px solid ${({theme}) => theme.secTextColor};
     padding: 2px 10px;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
@@ -660,8 +660,8 @@ nav {
     min-height: 35px;
     border: none;
     border-radius: 50px;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.9);
+    color: ${({theme}) => theme.textColor};
+    background-color: ${({theme}) => theme.bgColor};
     font-weight: bold;
 }
 
@@ -670,8 +670,8 @@ nav {
     min-height: 35px;
     border: none;
     border-radius: 50px;
-    color: white;
-    background-color: rgba(0, 68, 255, 1);;
+    color: ${({theme}) => theme.textColor};
+    background-color: ${({theme}) => theme.blueButtonColor};
     font-weight: bold;
 }
 
@@ -681,7 +681,7 @@ nav {
 }
 
 .followholder {
-    background-color: white;
+    background-color: ${({theme}) => theme.bgColor};
     width: 50%;
     height: 80%;
     border-radius: 8px;
@@ -694,9 +694,9 @@ nav {
     display: flex;
     align-items: center;
     gap: 25px;
-    color: rgba(0, 0, 0, 0.5);
+    color: ${({theme}) => theme.secTextColor};
     padding-bottom: 15px;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+    border-bottom: 2px solid ${({theme}) => theme.borderColor};
     font-size: 1.2rem;
     font-weight: bold;
 }
@@ -706,7 +706,7 @@ nav {
 }
 
 .active {
-    color: black;
+    color: ${({theme}) => theme.textColor};
 }
 
 .followingitems {
@@ -736,7 +736,7 @@ nav {
     text-overflow: ellipsis;
 }
 .followingitems > div > div:last-child {
-    color: rgba(0, 0, 0, 0.4);
+    color: ${({theme}) => theme.secTextColor};
 }
 .followingitems > div > div:last-child::before {
     content: "@"; 
@@ -748,15 +748,15 @@ nav {
     min-width: 100px;
     width: 120px;
     border-radius: 50px;
-    border: 1px solid rgba(0, 0, 0, 0.4);
-    color: rgba(0, 0, 0, 0.4);
+    border: 1px solid ${({theme}) => theme.secTextColor};
+    color: ${({theme}) => theme.secTextColor};
     font-weight: bold;
     font-size: 1rem;
-    background-color: white;
+    background-color: ${({theme}) => theme.bgColor};
 }
 
 .nofollowing {
-    color: rgba(0, 0, 0, 0.5);
+    color: ${({theme}) => theme.secTextColor};
     font-weight: bold;
     font-size: 1.1rem;
     margin-top: 20px;
@@ -798,7 +798,7 @@ nav {
 .postuploader {
     display: flex;
     justify-content: center;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid ${({theme}) => theme.borderColor};
 }
 
 .postuserholder {
@@ -831,14 +831,14 @@ nav {
     font-weight: bold;
 }
 .postuserinfo > p {
-    color: rgba(0, 0, 0, 0.5);
+    color: ${({theme}) => theme.secTextColor};
 }
 
 .postcaption {
     display: flex;
     justify-content: center;
     margin-top: 5px;
-    color: rgba(0, 0, 0, 0.5);
+    color: ${({theme}) => theme.secTextColor};
     font-size: 0.9rem;
     width: 200px;
     height: 60px;
@@ -895,13 +895,13 @@ nav {
 }
 .postextrainfo > div:last-child {
     font-size: 0.8rem;
-    color: rgba(0, 0, 0, 0.5);
+    color: ${({theme}) => theme.secTextColor};
     margin-top: 5px;
 }
 
 .addcomment {
     margin-top: 5px;
-    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    border-top: ${({theme}) => theme.borderColor};
     display: flex;
     align-items: center;
 }
@@ -930,7 +930,7 @@ nav {
     border: none;
     margin-left: auto;
     font-size: 0.9rem;
-    color:rgb(0, 68, 255);
+    color:${({theme}) => theme.blueButtonColor};
 }
 
 #post:hover {
@@ -955,7 +955,7 @@ nav {
 .postcomments > div > div:first-of-type {
     font-size: 0.9rem;
     gap: 5px;
-    color: rgba(38, 38, 38, 1);
+    color: ${({theme}) => theme.postCommentColor};
     height: 100%;
     overflow-wrap: break-word;
     overflow-y: auto;
@@ -966,14 +966,14 @@ nav {
     font-weight: lighter;
     margin-left: auto;
     font-size: 0.8rem;
-    color: rgba(38, 38, 38, 1);
+    color: ${({theme}) => theme.postCommentColor};
     align-self: center;
 }
 .postcomments > div > div > div {
     display: inline;
     margin-right: 5px;
     font-weight: bold;
-    color: black;
+    color: ${({theme}) => theme.textColor};
     font-size: 1rem;
 }
 
@@ -992,7 +992,7 @@ nav {
 .homepagepost {
     width: 100%;
     height: 700px;
-    box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 20px 1px ${({theme}) => theme.boxShadowColor};
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -1017,7 +1017,7 @@ nav {
 .hppagepostuploadinfo > div:last-child {
     font-weight: normal;
     font-size: 0.9rem;
-    color: rgba(0, 0, 0, 0.5);
+    color: ${({theme}) => theme.textColor};
 }
 
 .homepagepost > img {
@@ -1057,13 +1057,13 @@ nav {
 .homepagepost > .postextrainfo > div {
     font-size: 0.9rem;
     font-weight: bold;
-    color: black;
+    color: ${({theme}) => theme.textColor};
 }
 
 .posttimeupload {
     margin: 5px 10px;
     font-size: 0.8rem;
-    color: rgba(0, 0, 0, 0.5);
+    color: ${({theme}) => theme.secTextColor};
 }
 
 .hppostcaption {
@@ -1079,7 +1079,7 @@ nav {
 
 .viewcomments {
     margin: 5px 10px;
-    color: rgba(0, 0, 0, 0.5);
+    color: ${({theme}) => theme.secTextColor};
     font-size: 0.9rem;
 }
 .sharetooltip {
@@ -1092,8 +1092,8 @@ nav {
     visibility: hidden;
     position: absolute;
     width: 120px;
-    background-color: white;
-    color: black;
+    background-color: ${({theme}) => theme.bgColor};
+    color: ${({theme}) => theme.textColor};
     text-align: center;
     padding: 5px 0;
     border-radius: 6px;
@@ -1102,7 +1102,7 @@ nav {
     transition: opacity 0.3s;
     top: 100%;
     left: -200%;
-    box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 0px 2px 1px ${({theme}) => theme.boxShadowColor};
 }
 .sharetooltip > svg:hover {
     opacity: 70%;
@@ -1116,13 +1116,13 @@ nav {
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: transparent transparent rgba(0, 0, 0, 0.5) transparent;
+    border-color: transparent transparent ${({theme}) => theme.secTextColor}; transparent;
 }
 
 .viewprofile {
     visibility: hidden;
     opacity: 0;
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: ${({theme}) => theme.viewProfColor};
     border-radius: 10px;
     position: absolute;
     width: 100%;
@@ -1140,21 +1140,21 @@ nav {
     align-items: center;
 }
 .viewprofile > div > button {
-    border: 1px solid black;
+    border: 1px solid ${({theme}) => theme.textColor};
     border-radius: 100px;
     /* padding: 10px; */
     font-weight: bold;
     font-size: 1rem;
     min-height: 50px;
     min-width: 150px;
-    background-color: white;
-    box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.1);
+    background-color: ${({theme}) => theme.bgColor};
+    box-shadow: 0 0 20px 1px ${({theme}) => theme.boxShadowColor};
     align-self: center;
 }
 
 .viewprofile > div > button:hover {
-    background-color: rgba(0, 0, 0, 0.9);
-    color: white;
+    background-color: ${({theme}) => theme.bgColor};
+    color: ${({theme}) => theme.textColor};
 }
 
 .viewprofile > svg {
@@ -1175,7 +1175,7 @@ nav {
     position: absolute;
     width: 100%;
     background-color: white;
-    color: black;
+    color: ${({theme}) => theme.textColor};
     border-radius: 5px;
     z-index: 1;
     opacity: 1;
@@ -1192,7 +1192,7 @@ nav {
 
 .menubox {
     position: absolute;
-    box-shadow: 0 0 5px 1px rgba(0,0,0, .2);
+    box-shadow: 0 0 5px 1px ${({theme}) => theme.boxShadowColor};
     width: 100%;
     top: 130%;
     left: 0%;
@@ -1200,13 +1200,13 @@ nav {
     justify-content: center;
 }
 .navarrow {
-    background-color: white;
+    background-color: ${({theme}) => theme.bgColor};
     top: -10%;
     position: absolute;
     height: 20px;
     width: 20px;
     transform: rotate(45deg);
-    box-shadow: 0 0 5px 1px rgba(0,0,0, .2);
+    box-shadow: 0 0 5px 1px ${({theme}) => theme.boxShadowColor};
 }
 
 
@@ -1222,7 +1222,7 @@ nav {
     padding: 0px 10px;
 }
 .menuitems > div:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: ${({theme}) => theme.borderColor};
 }
 
 .menuitems > div > div > img {
@@ -1238,7 +1238,7 @@ nav {
     font-weight: bold;
 }
 .menuitems > div > div:last-child {
-    color: rgba(0, 0, 0, 0.5);
+    color: ${({theme}) => theme.secTextColor};
     font-weight: normal;
 }
 
@@ -1254,8 +1254,8 @@ nav {
     justify-content: center;
     align-items: center;
     gap: 30px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-    background-color: white;
+    border-bottom: 1px solid ${({theme}) => theme.borderColor};
+    background-color: ${({theme}) => theme.bgColor};
 }
 
 .messageheader > div {
@@ -1264,12 +1264,12 @@ nav {
 }
 
 .messageheader > svg {
-    color: rgba(0, 0, 0, 0.5);
+    color: ${({theme}) => theme.secTextColor};
     font-size: 1.3rem;
 }
 
 .messageheader > svg:hover {
-    color: black;
+    color: ${({theme}) => theme.textColor};
 }
 
 .conversationlist {
@@ -1280,11 +1280,10 @@ nav {
 .conversationlist > div {
     margin: 5px 10px;
     border-radius: 30px;
-    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 0px 4px ${({theme}) => theme.boxShadowColor};
     display: flex;
     gap: 10px;
-    background-color: white;
-}
+    background-color: ${({theme}) => theme.bgColor};
 
 .conversationlist > div > img {
     height: 60px;
@@ -1308,12 +1307,12 @@ nav {
 }
 
 .messageprofiles {
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    background-color: rgba(0, 0, 255, 0.05);
+    border: 1px solid ${({theme}) => theme.borderColor};
+    background-color: ${({theme}) => theme.msgProfileBgColor};
 }
 
 .conversationholder {
-    border-top: 1px solid rgba(0, 0, 100, 0.2);
+    border-top: 1px solid ${({theme}) => theme.convoHolderBgColor};
     display: flex;
     flex-direction: column-reverse;
     padding: 10px 20px;
@@ -1331,7 +1330,7 @@ nav {
     resize: none;
     outline: none;
     border-radius: 50px;
-    border: 1px solid rgba(0, 0, 0, 0.2);
+    border: 1px solid ${({theme}) => theme.borderColor};
     height: 30px;
     max-height: 30px;
     width: 70%;
@@ -1344,7 +1343,7 @@ nav {
 }
 
 .conversationmessage > div {
-    color: rgb(0, 68, 255);
+    color: ${({theme}) => theme.blueButtonColor};
     font-weight: bold;
 }
 
@@ -1370,8 +1369,8 @@ nav {
 }
 
 .frommessage > div {
-    background-color: rgb(0, 68, 255);
-    color: white;
+    background-color: ${({theme}) => theme.blueButtonColor};
+    color: ${({theme}) => theme.bgColor};
     border-radius: 50px;
     padding: 15px 15px;
 }
@@ -1393,7 +1392,7 @@ nav {
 }
 
 .tomessage > div {
-    background-color: rgba(68, 68, 68, 0.2);
+    background-color: ${({theme}) => theme.toMsgBgColor};
     color: black;
     border-radius: 50px;
     padding: 15px 15px;
@@ -1402,7 +1401,7 @@ nav {
 .messagemodal {
     width: 60%;
     height: 80%;
-    background-color: white;
+    background-color: ${({theme}) => theme.bgColor};
     border-radius: 15px;
 }
 
@@ -1412,7 +1411,7 @@ nav {
     font-weight: bold;
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid ${({theme}) => theme.borderColor};
     padding-bottom: 10px;
 }
 .messagemodalitemsholder {
@@ -1430,7 +1429,7 @@ nav {
 }
 
 .messagemodalitem:hover {
-    background-color: rgba(0, 0, 0, 0.1);    
+    background-color: ${({theme}) => theme.borderColor};   
 }
 .messagemodalitem > img {
     height: 60px;
@@ -1450,7 +1449,7 @@ nav {
 
 .messagemodalitem > div > div:last-child {
     font-size: 0.9rem;
-    color: rgba(0, 0, 0, 0.4);
+    color: ${({theme}) => theme.secTextColor};
     font-weight: bold;
 }
 
@@ -1459,44 +1458,22 @@ nav {
     background-color: transparent;
     border: none;
     font-size: 0.9rem;
-    color: rgb(0, 68, 255);
+    color: ${({theme}) => theme.blueButtonColor};
 }
 
-/* .popup { 
-  position: absolute;
-  left: -100px;
-  bottom: 0px;
-  transform: translate3d(0, 120%, 0);
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
-  background: white;
-  border-radius: 100px;
-  min-width: 200px;
-} 
 
-.popup::before {
-  content: "";
-  width: 20px;
-  height: 20px;
-  transform: translateX(0%) translateY(-50%) rotate(-45deg);
-  background: #fff;
-  position: absolute;
-  box-shadow: 1px 4px 8px rgba(0, 0, 0, 0.5);
-  z-index: -1;
-  top: 0;
-  left: 50%;
-} */
 .popup {
     position: absolute;
     width: 250px;
-    background-color: white;
-    color: black;
+    background-color: ${({theme}) => theme.bgColor};
+    color: ${({theme}) => theme.textColor};
     text-align: center;
     border-radius: 6px;
     transition: opacity 0.3s;
     top: 150%;
     left: 0;
     transform: translateX(-50%);
-    box-shadow: 0px 3px 8px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 3px 8px 1px ${({theme}) => theme.boxShadowColor};
     display: flex;
     flex-direction: column;
 }
@@ -1508,12 +1485,12 @@ nav {
     height: 15px;
     position: absolute;
     transform: translateX(50%) translateY(-50%) rotate(-45deg);
-    background-color: white;
+    background-color: ${({theme}) => theme.bgColor};
     top: 0%;
     left: 50%;
     margin-left: -5px;
     border-width: 5px;
-    box-shadow: 2px -2px 5px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 2px -2px 5px 0px ${({theme}) => theme.boxShadowColor};
     z-index: -1;
 }
 
@@ -1526,13 +1503,13 @@ nav {
 }
 
 .popup > div:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: ${({theme}) => theme.borderColor};
 }
 .popup > div > div > span {
     font-weight: bold;
 }
 .popup > div > div:last-child {
-    color: rgba(0, 0, 0, 0.5);
+    color: ${({theme}) => theme.secTextColor};
     font-size: 0.7rem;
     align-self: flex-end;
 }
@@ -1540,20 +1517,8 @@ nav {
     content: " ";
 }
 
-.heartclick > svg, .personclick > svg {
+.heartclick > svg {
     font-size: 1.7rem;
 }
 
-.personclick > .popup {
-    width: 150px;
-}
-
-.personclick > .popup > div {
-    justify-content: flex-start;
-    gap: 10px;
-}
-.personclick > .popup > div > div:last-child {
-    color: black;
-    font-size: 0.9rem;
-    align-self: center;
-}
+`

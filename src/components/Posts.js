@@ -64,21 +64,55 @@ const Posts = () => {
   const [emptyVal, setEmptyVal] = useState("");
   const setPostData = useContext(SetPostDataContext);
 
+  const getData = async () => {
+    let data = await (await get(ref(db, `users/${uid}/posts/`))).val();
+    console.log(profile, uid);
+    let status = 0;
+    for (let ele of data) {
+      console.log("1st", ele.postLink === pid && profile.uid !== uid);
+      console.log("2nd", ele.postLink === pid && profile.uid === uid);
+      if (ele.postLink === pid && profile.uid !== uid) {
+        console.log("set");
+        status = 1;
+        let profileDetails = await (await get(ref(db, `users/${uid}`))).val();
+        setProfile(profileDetails);
+        setPost(ele);
+        return;
+      } else if (ele.postLink === pid && profile.uid === uid) {
+        status = 2;
+        console.log("haah");
+        return;
+      }
+    }
+    if (status === 0) {
+      console.log("navigated");
+      navigate("/profile");
+    }
+    // get(ref(db, `users/${uid}/posts/`))
+    //   .then(async (snap) => snap.val())
+    //   .then(async (x) => {
+    //     for (let ele of x) {
+    //       console.log(ele.postLink, pid, profile.uid === uid);
+    //       if (ele.postLink === pid && profile.uid !== uid) {
+    //         let profileDetails = await (
+    //           await get(ref(db, `users/${uid}`))
+    //         ).val();
+    //         setProfile(profileDetails);
+    //         setPost(ele);
+    //         console.log("set");
+    //         return;
+    //       } else if (ele.postLink === pid && profile.uid === uid) {
+    //         console.log("haah");
+    //         return;
+    //       } else {
+    //         navigate("/profile");
+    //       }
+    //     }
+    //   });
+  };
+
   useEffect(() => {
-    get(ref(db, `users/${uid}/posts/`))
-      .then((snap) => snap.val())
-      .then((x) => {
-        x.forEach(async (ele) => {
-          if (ele.postLink === pid && profile.uid !== uid) {
-            let profileDetails = await (
-              await get(ref(db, `users/${uid}`))
-            ).val();
-            setProfile(profileDetails);
-            setPost(ele);
-          } else if (ele.postLink === pid && profile.uid === uid) return;
-          else navigate("/profile");
-        });
-      });
+    getData();
   }, []);
 
   const getPostData = async () => {
@@ -132,6 +166,32 @@ const Posts = () => {
     await set(ref(db, `users/${profile.uid}`), data);
     await getPostData();
     if (profile.uid === userContext.uid) setUserContext(data);
+    let notifData = await (
+      await get(ref(db, `notifications/${profile.uid}`))
+    ).val();
+    let newNotifData = {
+      read: false,
+      notifs: notifData
+        ? [
+            ...notifData.notifs,
+            {
+              by: userContext.uid,
+              type: "like",
+              url: post.postLink,
+              time: new Date().getTime(),
+            },
+          ]
+        : [
+            {
+              by: userContext.uid,
+              type: "like",
+              url: post.postLink,
+              time: new Date().getTime(),
+            },
+          ],
+    };
+    console.log(newNotifData);
+    await set(ref(db, `notifications/${profile.uid}/`), newNotifData);
     setProfile(data);
   };
   const submitComment = async () => {
@@ -172,6 +232,35 @@ const Posts = () => {
     });
     data.posts[ind] = post;
     await set(ref(db, `users/${profile.uid}`), data);
+    if (userContext.uid !== profile.uid) {
+      let notifData = await (
+        await get(ref(db, `notifications/${profile.uid}`))
+      ).val();
+
+      let newNotifData = {
+        read: false,
+        notifs: notifData
+          ? [
+              ...notifData.notifs,
+              {
+                by: userContext.uid,
+                type: "comment",
+                url: post.postLink,
+                time: new Date().getTime(),
+              },
+            ]
+          : [
+              {
+                by: userContext.uid,
+                type: "comment",
+                url: post.postLink,
+                time: new Date().getTime(),
+              },
+            ],
+      };
+      console.log(newNotifData);
+      await set(ref(db, `notifications/${profile.uid}/`), newNotifData);
+    }
     if (profile.uid === userContext.uid) setUserContext(data);
     setProfile(data);
     setEmptyVal("");
@@ -226,7 +315,6 @@ const Posts = () => {
   const handleChange = (e) => {
     if (e) setEmptyVal(e.target.val);
   };
-
   if (userContext.name)
     return (
       <div className="postholder">

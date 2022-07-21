@@ -95,6 +95,34 @@ const HomePagePosts = () => {
     await set(ref(db, `users/${post.uid}`), data);
     let val = [...postData];
     val[num] = post;
+
+    let notifData = await (
+      await get(ref(db, `notifications/${post.uid}`))
+    ).val();
+    let newNotifData = {
+      read: false,
+      notifs: notifData
+        ? [
+            ...notifData.notifs,
+            {
+              by: user.uid,
+              type: "comment",
+              url: post.postLink,
+              time: new Date().getTime(),
+            },
+          ]
+        : [
+            {
+              by: user.uid,
+              type: "comment",
+              url: post.postLink,
+              time: new Date().getTime(),
+            },
+          ],
+    };
+    console.log(newNotifData);
+    await set(ref(db, `notifications/${post.uid}/`), newNotifData);
+
     setPostData(val);
     setEmptyVal("");
   };
@@ -129,7 +157,35 @@ const HomePagePosts = () => {
     await set(ref(db, `users/${post.uid}`), data);
     let val = [...postData];
     val[num] = post;
-    console.log("here 1");
+    if (user.uid !== post.uid) {
+      let notifData = await (
+        await get(ref(db, `notifications/${post.uid}`))
+      ).val();
+      let newNotifData = {
+        read: false,
+        notifs: notifData
+          ? [
+              ...notifData.notifs,
+              {
+                by: user.uid,
+                type: "follow",
+                url: post.postLink,
+                time: new Date().getTime(),
+              },
+            ]
+          : [
+              {
+                by: user.uid,
+                type: "follow",
+                url: post.postLink,
+                time: new Date().getTime(),
+              },
+            ],
+      };
+      console.log(newNotifData);
+      await set(ref(db, `notifications/${post.uid}/`), newNotifData);
+    }
+
     setPostData(val);
   };
 
@@ -149,12 +205,13 @@ const HomePagePosts = () => {
         }
       }
     }
-    user.posts.forEach((x) => {
-      x.photo = user.photo;
-      x.name = user.name;
-      x.uid = user.uid;
-      arr.push(x);
-    });
+    if (user.posts)
+      user.posts.forEach((x) => {
+        x.photo = user.photo;
+        x.name = user.name;
+        x.uid = user.uid;
+        arr.push(x);
+      });
     arr.sort((a, b) => (a.time < b.time ? 1 : -1));
     console.log("here 2");
     console.log(arr);
@@ -282,9 +339,13 @@ const HomePagePosts = () => {
                 />
                 <div>
                   {x.uid === user.uid ? (
-                    <button onClick={() => navigate("/profile")}>Edit Profile</button>
+                    <button onClick={() => navigate("/profile")}>
+                      Edit Profile
+                    </button>
                   ) : (
-                    <button onClick={() => navigate(`/profile/${x.uid}`)}>View Profile</button>
+                    <button onClick={() => navigate(`/profile/${x.uid}`)}>
+                      View Profile
+                    </button>
                   )}
                 </div>
               </div>

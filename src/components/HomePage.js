@@ -32,7 +32,7 @@ const HomePage = () => {
   let dbRef = {};
   const dbContext = useContext(DbContext);
   get(ref(dbContext, "users/")).then((val) => (dbRef = val.val()));
-
+  console.log(user);
   return (
     <div className="homepageholder">
       {postModalActive ? <PostModal /> : null}
@@ -66,7 +66,7 @@ const HomePage = () => {
               setFollowingClick(false);
             }}
           >
-            <div>{user.followers.length ? user.followers.length : 0}</div>
+            <div>{user.followers && user.followers.length ? user.followers.length : 0}</div>
             <div>Followers</div>
           </div>
           <div className="posts" onClick={() => navigate("/profile")}>

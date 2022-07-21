@@ -16,6 +16,8 @@ import { get, ref, set } from "firebase/database";
 import { async } from "@firebase/util";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+
+
 const FollowModal = () => {
   const { pid } = useParams();
   const [profile, setProfile] = useState({});
@@ -40,6 +42,7 @@ const FollowModal = () => {
   }
 
   const user = Object.keys(profile).length ? profile : userContext;
+  console.log(user.uid);
 
   const unFollow = async (profile) => {
     let followerData = await (
@@ -67,11 +70,35 @@ const FollowModal = () => {
     let followerData = await (
       await get(ref(db, `users/${userContext.uid}`))
     ).val();
-    //
     if (followerData.following) followerData.following.push(profile.uid);
     else followerData.following = [profile.uid];
     await set(ref(db, `users/${userContext.uid}`), followerData);
-
+    let notifData = await (
+      await get(ref(db, `notifications/${profile.uid}`))
+    ).val();
+    let newNotifData = {
+      read: false,
+      notifs: notifData
+        ? [
+            ...notifData.notifs,
+            {
+              by: userContext.uid,
+              type: "follow",
+              url: userContext.uid,
+              time: new Date().getTime(),
+            },
+          ]
+        : [
+            {
+              by: userContext.uid,
+              type: "follow",
+              url: userContext.uid,
+              time: new Date().getTime(),
+            },
+          ],
+    };
+    console.log(newNotifData);
+    await set(ref(db, `notifications/${profile.uid}/`), newNotifData);
     let followingData = await (
       await get(ref(db, `users/${profile.uid}`))
     ).val();

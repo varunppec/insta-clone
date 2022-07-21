@@ -2,34 +2,86 @@ import {
   FacebookAuthProvider,
   getAuth,
   getRedirectResult,
+  GoogleAuthProvider,
   signInWithPopup,
   signInWithRedirect,
 } from "firebase/auth";
 import { get, set, ref } from "firebase/database";
 import { forwardRef, useContext, useState } from "react";
-import { DbContext, UserContext } from "./Context";
+import { DbContext, SetUserContext, UserContext } from "./Context";
 import React from "react";
 
 const HomePageSignUp = ({ userID, setTest }) => {
-  let dbRef = {};
   const dbContext = useContext(DbContext);
-  get(ref(dbContext, "users/")).then((val) => (dbRef = val.val()));
+  const setUser = useContext(SetUserContext);
   const signIn = async () => {
-    const id = checkID(); //checks if id is in db returns id if found else
+    const id = await checkID(); //checks if id is in db returns id if found else
+    console.log(id);
     if (!id) return;
     localStorage.setItem("userid", id);
-    const provider = new FacebookAuthProvider();
+    const provider = new GoogleAuthProvider();
     const auth = getAuth();
-    await signInWithRedirect(auth, provider);
+    let result = await signInWithPopup(auth, provider);
+    let data = await (await get(ref(dbContext, `users`))).val();
+    let index;
+    if (
+      Object.keys(data)
+        .map((x) => {
+          index = x;
+          return data[x].email;
+        })
+        .includes(result.user.email)
+    ) {
+      localStorage.setItem("userid", index);
+      setUser(data[index]);
+    } else {
+      let value = result.user;
+      let val = {
+        name: value.displayName,
+        uid: id,
+        usercode: value.uid,
+        photo: value.photoURL,
+        email: value.email,
+        followers: ["daddy"],
+        following: ["daddy"],
+        posts: "",
+        pp: "https://firebasestorage.googleapis.com/v0/b/insta-clone-3ada4.appspot.com/o/default_pp.jpg?alt=media&token=52c9c68a-5365-4dcd-9d7b-cda5457c86cb",
+        bio: `Hey there! My name is ${value.displayName}. Stop stalking :(`,
+      };
+      console.log(id);
+      set(ref(dbContext, `users/${id}`), val);
+      setUser(val);
+    }
   };
 
   const logIn = async () => {
-    const provider = new FacebookAuthProvider();
+    const provider = new GoogleAuthProvider();
     const auth = getAuth();
-    await signInWithRedirect(auth, provider);
+    let result = await signInWithPopup(auth, provider);
+    console.log(result);
+    let data = await (await get(ref(dbContext, `users`))).val();
+    if (
+      Object.keys(data)
+        .map((x) => {
+          return data[x].email;
+        })
+        .includes(result.user.email)
+    ) {
+      let index = Object.keys(data)
+        .map((x) => {
+          return data[x].email;
+        })
+        .indexOf(result.user.email);
+        index = Object.keys(data)[index]
+      localStorage.setItem("userid", index);
+      console.log(data, index)
+      setUser(data[index]);
+    }
   };
 
-  const checkID = () => {
+  const checkID = async () => {
+    let dbData = await (await get(ref(dbContext, "users/"))).val();
+    console.log(dbData);
     const input = document.querySelector("#userid");
     const errormessage = document.querySelector(".errormessage");
     const button = document.querySelector("#signupbut");
@@ -48,8 +100,7 @@ const HomePageSignUp = ({ userID, setTest }) => {
       errormessage.innerText = "Too long";
       return;
     }
-    console.log(dbRef);
-    if (dbRef[input.value]) {
+    if (dbData[input.value]) {
       errormessage.innerText = "ID has already been taken";
       return;
     } else {
@@ -105,7 +156,7 @@ const HomePageSignUp = ({ userID, setTest }) => {
                   logIn();
                 }}
               >
-                Log in with Facebook
+                Log in with Google
               </div>
             </div>
           </div>
