@@ -32,7 +32,6 @@ const HomePage = () => {
   let dbRef = {};
   const dbContext = useContext(DbContext);
   get(ref(dbContext, "users/")).then((val) => (dbRef = val.val()));
-  console.log(user);
   return (
     <div className="homepageholder">
       {postModalActive ? <PostModal /> : null}

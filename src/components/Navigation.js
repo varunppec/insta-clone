@@ -67,26 +67,20 @@ const Navigation = () => {
   const [notification, setNotification] = useState(false);
   const [profilePopup, setProfilePopup] = useState(false);
   const clickOutsideRef = useRef();
+  const clickOutsideNotifRef = useRef();
   const theme = useContext(ThemeContext);
   const setTheme = useContext(SetThemeContext);
-  useEffect(() => {
-    if (document.querySelector(".menuitems")) {
-      setBoxHeight(document.querySelector(".menuitems").clientHeight);
-      document.querySelector(".menubox").style.height = boxHeight + "px";
-    }
-  }, [searchItems]);
-
   useEffect(() => {
     const checkOutsideClick = (e) => {
       if (
         notification &&
-        clickOutsideRef.current &&
-        !clickOutsideRef.current.contains(e.target)
+        clickOutsideNotifRef.current &&
+        !clickOutsideNotifRef.current.contains(e.target)
       )
         setNotification(false);
 
       return () => {
-        document.removeEventListener("mouseup", checkOutsideClick);
+        document.removeEventListener("click", checkOutsideClick);
       };
     };
     const checkOutsideClickProfile = (e) => {
@@ -98,14 +92,14 @@ const Navigation = () => {
         setProfilePopup(false);
 
       return () => {
-        document.removeEventListener("mouseup", checkOutsideClickProfile);
+        document.removeEventListener("click", checkOutsideClickProfile);
       };
     };
-    document.addEventListener("mouseup", checkOutsideClick);
-    document.addEventListener("mouseup", checkOutsideClickProfile);
+    document.addEventListener("click", checkOutsideClick);
+    document.addEventListener("click", checkOutsideClickProfile);
 
     // checkOutsideClick();
-  }, [notification]);
+  }, [notification, profilePopup]);
 
   const signUserOut = async () => {
     localStorage.removeItem("userid");
@@ -137,7 +131,7 @@ const Navigation = () => {
       }
     });
     usernameArray.forEach((x, index) => {
-      if (x.includes(searchInput)) {
+      if (x.toLowerCase().includes(searchInput)) {
         list.push({
           name: x,
           uid: useridArray[index],
@@ -165,7 +159,7 @@ const Navigation = () => {
             searchProfile(e);
           }}
           onBlur={(e) => {
-            setSearchItems({})
+            setSearchItems({});
           }}
           type="text"
           placeholder="Search"
@@ -222,14 +216,14 @@ const Navigation = () => {
           }
           onClick={() => navigate("/messages")}
         ></InboxOutlined>
-        <div
-          className="heartclick"
-          ref={clickOutsideRef}
-          onClick={() => {
-            notification ? setNotification(false) : setNotification(true);
-          }}
-        >
-          <FavoriteRounded className={notification ? "iconactive" : null} />
+        <div className="heartclick">
+          <FavoriteRounded
+            ref={clickOutsideNotifRef}
+            onClick={() => {
+              setNotification(!notification);
+            }}
+            className={notification ? "iconactive" : null}
+          />
           {notification ? (
             <Notification setNotification={setNotification} />
           ) : null}
@@ -240,7 +234,6 @@ const Navigation = () => {
             ref={clickOutsideRef}
             onClick={() => {
               setProfilePopup(!profilePopup);
-              // navigate("/profile");
             }}
           ></Person>
           {profilePopup ? (
@@ -287,8 +280,10 @@ const Notification = ({ setNotification }) => {
       {notifs.length ? (
         notifs.slice(0, 4).map((x) => {
           if (x.type === "like") {
+            console.log("here");
             return (
               <div
+              key={uniqid()}
                 onClick={() => {
                   setNotification(false);
                   navigate(`/posts/${user.uid}/${x.url}`);
@@ -301,6 +296,7 @@ const Notification = ({ setNotification }) => {
               </div>
             );
           } else if (x.type === "comment") {
+            console.log("here");
             return (
               <div
                 onClick={() => {
@@ -315,6 +311,7 @@ const Notification = ({ setNotification }) => {
               </div>
             );
           } else if (x.type === "follow") {
+            console.log("here");
             return (
               <div
                 onClick={() => {
@@ -329,6 +326,7 @@ const Notification = ({ setNotification }) => {
               </div>
             );
           } else {
+            console.log("here");
             return (
               <div
                 onClick={() => {

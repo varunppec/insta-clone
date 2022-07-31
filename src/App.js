@@ -63,7 +63,7 @@ function App() {
   const [followingClick, setFollowingClick] = useState(true);
   const [postData, setPostData] = useState({});
   const loggedIn = useRef(false);
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState(true);
 
   useEffect(() => {
     let database = getDatabase();
@@ -81,10 +81,12 @@ function App() {
       if (data) setUser(data);
     }
   };
-
+  console.log(theme);
   if (user)
     return (
-      <div className="App" style={style}>
+      <div className="App" 
+      style={style}
+      >
         <BrowserRouter>
           <FollowingClickContext.Provider value={followingClick}>
             <SetFollowingClickContext.Provider value={setFollowingClick}>
@@ -100,8 +102,8 @@ function App() {
                                 <SetUserContext.Provider value={setUser}>
                                   <SetThemeContext.Provider value={setTheme}>
                                     <ThemeContext.Provider value={theme}>
-                                      {/* <ThemeProvider theme={theme==='light' ? lightTheme : darkTheme}> */}
-                                      {/* <GlobalStyles /> */}
+                                      <ThemeProvider theme={theme ? lightTheme : darkTheme}>
+                                      <GlobalStyles />
                                       <Routes>
                                         <Route
                                           path="/"
@@ -167,7 +169,7 @@ function App() {
                                           element={<Navigate to="/"></Navigate>}
                                         />
                                       </Routes>
-                                      {/* </ThemeProvider> */}
+                                      </ThemeProvider>
                                     </ThemeContext.Provider>
                                   </SetThemeContext.Provider>
                                 </SetUserContext.Provider>

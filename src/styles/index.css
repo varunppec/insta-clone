@@ -60,9 +60,9 @@ nav {
     fill:black;
 }
 
-.navicons > .iconactive, .navicons > div > .iconactive {
+/* .navicons > .iconactive, .navicons > div > .iconactive {
     fill: black;
-}
+} */
 .signupinputs > * {
     margin: 2px;
 }
@@ -520,7 +520,7 @@ nav {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 10px 0;
+    /* margin: 10px 0; */
 }
 
 .psettings {
@@ -989,7 +989,7 @@ nav {
     gap: 70px;
 }
 
-.homepagepost {
+/* .homepagepost {
     width: 100%;
     height: 700px;
     box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.1);
@@ -997,7 +997,7 @@ nav {
     display: flex;
     flex-direction: column;
     position: relative;
-}
+} */
 
 .homepagepost > div:first-child {
     display: flex;
@@ -1193,11 +1193,13 @@ nav {
 .menubox {
     position: absolute;
     box-shadow: 0 0 5px 1px rgba(0,0,0, .2);
-    width: 100%;
+    min-width: 100%;
+    width: max-content;
     top: 130%;
     left: 0%;
     display: flex;
     justify-content: center;
+    flex: 1;
 }
 .navarrow {
     background-color: white;
@@ -1211,6 +1213,7 @@ nav {
 
 
 .menuitems > div {
+    width: calc(100% - 20px);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1219,7 +1222,6 @@ nav {
     min-height: 40px;
     border-radius: 5px;
     margin: 10px 10px;
-    padding: 0px 10px;
 }
 .menuitems > div:hover {
     background-color: rgba(0, 0, 0, 0.1);
@@ -1240,6 +1242,8 @@ nav {
 .menuitems > div > div:last-child {
     color: rgba(0, 0, 0, 0.5);
     font-weight: normal;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .messagesholder {

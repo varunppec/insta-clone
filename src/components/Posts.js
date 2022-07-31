@@ -88,27 +88,6 @@ const Posts = () => {
       console.log("navigated");
       navigate("/profile");
     }
-    // get(ref(db, `users/${uid}/posts/`))
-    //   .then(async (snap) => snap.val())
-    //   .then(async (x) => {
-    //     for (let ele of x) {
-    //       console.log(ele.postLink, pid, profile.uid === uid);
-    //       if (ele.postLink === pid && profile.uid !== uid) {
-    //         let profileDetails = await (
-    //           await get(ref(db, `users/${uid}`))
-    //         ).val();
-    //         setProfile(profileDetails);
-    //         setPost(ele);
-    //         console.log("set");
-    //         return;
-    //       } else if (ele.postLink === pid && profile.uid === uid) {
-    //         console.log("haah");
-    //         return;
-    //       } else {
-    //         navigate("/profile");
-    //       }
-    //     }
-    //   });
   };
 
   useEffect(() => {
