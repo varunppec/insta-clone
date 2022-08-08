@@ -22,6 +22,7 @@ import {
   UserContext,
 } from "./Context";
 import uniqid from "uniqid";
+import Skeleton from "react-loading-skeleton";
 
 const getCommentTimeDiff = (commTime) => {
   let time = new Date().getTime() - commTime;
@@ -169,12 +170,7 @@ const Navigation = () => {
           <>
             <div className="menubox">
               <div className="navarrow"></div>
-              <div
-                className="menuitems"
-                onLoad={() => {
-                  console.log("loaded");
-                }}
-              >
+              <div className="menuitems">
                 {searchItems
                   .filter((x, index) => index < 5)
                   .map((x) => {
@@ -194,9 +190,9 @@ const Navigation = () => {
                             height="25px"
                             alt=""
                           ></img>
-                          <div>{x.name}</div>
+                          <div>{x.name || <Skeleton />}</div>
                         </div>
-                        <div>@{x.uid}</div>
+                        <div>{"@" + x.uid || <Skeleton />}</div>
                       </div>
                     );
                   })}
@@ -209,13 +205,14 @@ const Navigation = () => {
         <HomeOutlined
           className={window.location.pathname === "/" ? "iconactive" : ""}
           onClick={() => navigate("/")}
-        ></HomeOutlined>
+        ></HomeOutlined>{" "}
+        
         <InboxOutlined
           className={
             window.location.pathname === "/messages" ? "iconactive" : ""
           }
           onClick={() => navigate("/messages")}
-        ></InboxOutlined>
+        ></InboxOutlined>{" "}
         <div className="heartclick">
           <FavoriteRounded
             ref={clickOutsideNotifRef}
@@ -223,10 +220,10 @@ const Navigation = () => {
               setNotification(!notification);
             }}
             className={notification ? "iconactive" : null}
-          />
-          {notification ? (
-            <Notification setNotification={setNotification} />
-          ) : null}
+          />{" "}
+          {notification
+            ? <Notification setNotification={setNotification} />
+            : null}
         </div>
         <div className="personclick">
           <Person
@@ -235,12 +232,12 @@ const Navigation = () => {
             onClick={() => {
               setProfilePopup(!profilePopup);
             }}
-          ></Person>
+          ></Person>{" "}
           {profilePopup ? (
             <div className="popup">
               <div onClick={() => navigate("/profile")}>
                 <AccountCircleRounded />
-                <div>My Profile</div>
+                <div>My Profile</div> 
               </div>
               <div
                 onClick={() => {
@@ -248,7 +245,7 @@ const Navigation = () => {
                 }}
               >
                 <LogoutRounded />
-                <div>Logout</div>
+                <div>Logout</div> 
               </div>
             </div>
           ) : null}
@@ -278,70 +275,77 @@ const Notification = ({ setNotification }) => {
   return (
     <div className="popup">
       {notifs.length ? (
-        notifs.slice(0, 4).map((x) => {
-          if (x.type === "like") {
-            console.log("here");
-            return (
-              <div
-              key={uniqid()}
-                onClick={() => {
-                  setNotification(false);
-                  navigate(`/posts/${user.uid}/${x.url}`);
-                }}
-              >
-                <div>
-                  <span>{x.by}</span> liked your post
+        notifs
+          .slice(0, 4)
+          .sort((a, b) => {
+            if (a.time < b.time) return true;
+            else return false;
+          })
+          .map((x) => {
+            if (x.type === "like") {
+              console.log("here");
+              return (
+                <div
+                  key={uniqid()}
+                  onClick={() => {
+                    setNotification(false);
+                    navigate(`/posts/${user.uid}/${x.url}`);
+                  }}
+                >
+                  <div>
+                    <span>{x.by}</span> liked your post
+                  </div>
+                  <div>{getCommentTimeDiff(x.time)}</div>
                 </div>
-                <div>{getCommentTimeDiff(x.time)}</div>
-              </div>
-            );
-          } else if (x.type === "comment") {
-            console.log("here");
-            return (
-              <div
-                onClick={() => {
-                  setNotification(false);
-                  navigate(`/posts/${user.uid}/${x.url}`);
-                }}
-              >
-                <div>
-                  <span>{x.by}</span> commented on your post
+              );
+            } else if (x.type === "comment") {
+              console.log("here");
+              return (
+                <div
+                  key={uniqid()}
+                  onClick={() => {
+                    setNotification(false);
+                    navigate(`/posts/${user.uid}/${x.url}`);
+                  }}
+                >
+                  <div>
+                    <span>{x.by}</span> commented on your post
+                  </div>
+                  <div>{getCommentTimeDiff(x.time)}</div>
                 </div>
-                <div>{getCommentTimeDiff(x.time)}</div>
-              </div>
-            );
-          } else if (x.type === "follow") {
-            console.log("here");
-            return (
-              <div
-                onClick={() => {
-                  setNotification(false);
-                  navigate(`/profile/${x.url}`);
-                }}
-              >
-                <div>
-                  <span>{x.by}</span> followed you
+              );
+            } else if (x.type === "follow") {
+              console.log("here");
+              return (
+                <div
+                  onClick={() => {
+                    setNotification(false);
+                    navigate(`/profile/${x.url}`);
+                  }}
+                >
+                  <div>
+                    <span>{x.by}</span> followed you
+                  </div>
+                  <div>{getCommentTimeDiff(x.time)}</div>
                 </div>
-                <div>{getCommentTimeDiff(x.time)}</div>
-              </div>
-            );
-          } else {
-            console.log("here");
-            return (
-              <div
-                onClick={() => {
-                  setNotification(false);
-                  navigate(`/messages`);
-                }}
-              >
-                <div>
-                  <span>{x.by}</span> messaged you
+              );
+            } else {
+              console.log("here");
+              return (
+                <div
+                  onClick={() => {
+                    setNotification(false);
+                    navigate(`/messages`);
+                  }}
+                >
+                  <div>
+                    <span>{x.by}</span> messaged you
+                  </div>
+                  <div>{getCommentTimeDiff(x.time)}</div>
                 </div>
-                <div>{getCommentTimeDiff(x.time)}</div>
-              </div>
-            );
-          }
-        })
+              );
+            }
+          })
       ) : (
         <div>No notifications</div>
       )}

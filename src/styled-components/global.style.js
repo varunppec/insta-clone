@@ -2,6 +2,9 @@ import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyles = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Cookie&display=swap');
+div {
+    cursor: default;
+}
 html, body {
     margin: 0;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -382,16 +385,13 @@ nav {
 .followingitems > div > div:last-child {
     color: ${({theme}) => theme.secTextColor};
 }
-.followingitems > div > div:last-child::before {
-    content: "@"; 
-}
+
 
 .followingitems > button {
     margin-left: auto;
     margin-right: 5px;
     height: 45px;
-    min-width: 100px;
-    width: 120px;
+    min-width: 120px;
     border-radius: 50px;
     border: 1px solid ${({theme}) => theme.secTextColor};
     color: ${({theme}) => theme.secTextColor};
@@ -402,7 +402,7 @@ nav {
 
 .followingitems > button:hover {
     background-color: ${({theme}) => theme.oppColor};
-    color: ${({theme}) => theme.inputBgColor};
+    color: ${({theme}) => theme.viewProfColor};
 }
 
 .nofollowing {
@@ -689,6 +689,7 @@ nav {
     flex-direction: column-reverse;
     padding: 10px 20px;
     gap: 10px;
+    overflow-y: scroll;
 }
 
 .conversationmessage {
@@ -742,7 +743,7 @@ nav {
     border-radius: 50%;
 }
 
-.frommessage > div {
+.frommessage >  {
     background-color: ${({theme}) => theme.blueButtonColor};
     color: ${({theme}) => theme.bgColor};
     border-radius: 50px;
@@ -767,7 +768,7 @@ nav {
 
 .tomessage > div {
     background-color: ${({theme}) => theme.toMsgBgColor};
-    color: black;
+    color:  ${({theme}) => theme.textColor};
     border-radius: 50px;
     padding: 15px 15px;
 }
@@ -858,6 +859,7 @@ nav {
     border-radius: 50px;
     width: fit-content;
     padding: 5px 0;
+    align-items: center;
 }
 
 .supinputs > div {
@@ -894,7 +896,7 @@ nav {
 
 .signupform>div>button {
     background-color: ${({theme}) => theme.blueButtonColor};
-    color: ${({theme}) => theme.textColor};;
+    color: white;
     min-width: 250px;
     border: none;
     border-radius: 5px;
@@ -905,20 +907,26 @@ nav {
 }
 
 .homepagesignup {
-    display: grid;
-    grid-template-columns: 2fr 3fr;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 100vh;
+}
+.signupformholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .signupform {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    margin-top: 100px;
     width: fit-content;
     padding: 30px 50px;
     box-shadow: 0 1px 5px ${({theme}) => theme.boxShadowColor};
     color:${({theme}) => theme.secTextColor};
+    border-radius: 10px;
 }
 
 .logindiv {
@@ -984,10 +992,7 @@ nav {
 .userinfo > div:last-child {
     color: ${({theme}) => theme.secTextColor};
 }
-.userinfo > div:last-child::before {
-    content: "@";
-    
-}
+
 
 .userstats {
     margin-top: 5px;
@@ -1186,7 +1191,7 @@ nav {
 
 .profbuttons > button:hover {
     background-color: ${({theme}) => theme.oppColor};
-    color: ${({theme}) => theme.inputBgColor};
+    color: ${({theme}) => theme.mainBgColor};
 }
 
 .profiledetails {
@@ -1210,10 +1215,7 @@ nav {
     color: ${({theme}) => theme.secTextColor};
     font-size: 1.4rem;
 }
-.basedetails > div:nth-child(2)::before {
-    content: "@";
-   
-}
+
 
 .basedetails > div:last-child {
     display: flex;
@@ -1655,8 +1657,40 @@ nav {
     grid-template-columns: 1fr 3fr;
 }
 
+.frommessage > .msgtime, .tomessage > .msgtime {
+    font-weight: bold;
+    font-size: 0.7rem;
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    color: ${({theme}) => theme.secTextColor};
+    align-self: flex-end;
+}
+.rectangle, .circle {
+    animation: skeleton-loading 1s linear infinite alternate;
+}
 
+@keyframes skeleton-loading {
+    0% {
+        background-color: ${({theme}) => theme.initColor};
+    }
+    100% {
+        background-color: ${({theme}) => theme.finalColor};
+    }
+}
+.circle {
+    border-radius: 50%;
+    background-color: grey;
+}
+.homepagepost > div > .circle {
+    width: 35px;
+    height: 35px;
+}
 
+.rectangle {
+    background-color: grey;
+    border-radius: 5px;
+}
 
 
 `

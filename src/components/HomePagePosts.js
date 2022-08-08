@@ -6,7 +6,8 @@ import {
   PostDataContext,
   SetPostDataContext,
   UserContext,
-} from "./components/Context";
+} from "./Context";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import uniqid from "uniqid";
 import {
   MoreHoriz,
@@ -17,7 +18,7 @@ import {
   SentimentDissatisfiedSharp,
   CloseOutlined,
 } from "@material-ui/icons";
-import { getTimeDiff } from "./components/Posts";
+import { getTimeDiff } from "./Posts";
 import { useNavigate } from "react-router-dom";
 import CopyToClipboard from "react-copy-to-clipboard";
 
@@ -355,7 +356,101 @@ const HomePagePosts = () => {
       </div>
     );
   } else {
-    return <div>Loading...</div>;
+    return (
+      <div className="homepagegrid">
+        <SkeletonTheme baseColor="#202020" highlightColor="#444">
+          <div key={uniqid()} className="homepagepost">
+            <div>
+              <div className="circle"></div>
+              <div className="hppagepostuploadinfo">
+                <div
+                  className="rectangle"
+                  style={{
+                    width: "100px",
+                    height: "15px",
+                    marginBottom: "5px",
+                  }}
+                ></div>
+                <div
+                  className="rectangle"
+                  style={{ width: "80px", height: "15px" }}
+                ></div>
+              </div>
+              <div
+                className="rectangle"
+                style={{ width: "30px", height: "15px", marginLeft: "auto" }}
+              ></div>
+            </div>
+            <div
+              className="rectangle"
+              style={{ width: "100%", height: "70%", borderRadius: "0" }}
+            ></div>
+            <div className="postbuttons">
+              <div
+                className="rectangle"
+                style={{ width: "25px", height: "20px" }}
+              ></div>
+              <div
+                className="rectangle"
+                style={{ width: "25px", height: "20px" }}
+              ></div>
+              <div className="sharetooltip">
+                <div
+                  className="rectangle"
+                  style={{ width: "25px", height: "20px" }}
+                ></div>
+              </div>
+            </div>
+            <div className="postextrainfo">
+              <div
+                className="rectangle"
+                style={{ width: "100px", height: "20px", marginBottom: "5px" }}
+              ></div>
+            </div>
+            <div className="hppostcaption">
+              <div
+                className="rectangle"
+                style={{ width: "30px", height: "20px" }}
+              ></div>
+              <div
+                className="rectangle"
+                style={{ width: "180px", height: "20px" }}
+              ></div>
+            </div>
+            <div className="somecomments">
+              <div key={uniqid()}>
+                <div
+                  className="rectangle"
+                  style={{ width: "180px", height: "20px", marginTop: "5px" }}
+                ></div>
+              </div>
+            </div>
+            <div className="posttimeupload">
+              <div
+                className="rectangle"
+                style={{ width: "80px", height: "20px" }}
+              ></div>
+            </div>
+            <div className="addcomment">
+              <div
+                className="rectangle"
+                style={{ width: "180px", height: "20px" }}
+              ></div>
+              <div
+                className="rectangle"
+                style={{ width: "80px", height: "20px", marginLeft: "auto" }}
+              ></div>
+            </div>
+            <div className={"viewprofile"}>
+              <Skeleton />
+              <div>
+                <Skeleton></Skeleton>
+              </div>
+            </div>
+          </div>
+        </SkeletonTheme>
+      </div>
+    );
   }
 };
 

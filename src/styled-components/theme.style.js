@@ -10,7 +10,10 @@ export const lightTheme =  {
     mainBgColor: 'white',
     oppColor: 'black',
     viewProfColor: 'rgba(255, 255, 255, .7)',
-    blackButtonColor: 'rgb(255,255,255)'
+    blackButtonColor: 'rgb(255,255,255)',
+    convoHolderBgColor: 'rgba(0, 0, 100, 0.2)',
+    initColor: 'rgb(150, 150, 150)',
+    finalColor: 'rgb(190, 190, 190)'
 }
 
 export const darkTheme =  {
@@ -26,5 +29,8 @@ export const darkTheme =  {
     mainBgColor: 'black',
     oppColor: 'white',
     viewProfColor: 'rgba(0, 0, 0, .8)',
-    blackButtonColor: 'rgba(255,255,255,0)'
+    blackButtonColor: 'rgba(255,255,255,0)',
+    convoHolderBgColor: 'rgba(255, 255, 255, 0.2)',
+    initColor: 'rgb(30, 30, 30)',
+    finalColor: 'rgb(70, 70, 70)'
 }

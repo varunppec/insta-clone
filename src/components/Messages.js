@@ -1,6 +1,6 @@
 import uniqid from "uniqid";
 import { CloseOutlined, EditOutlined as Edit } from "@material-ui/icons";
-import { get, ref, set } from "firebase/database";
+import { get, onValue, ref, set } from "firebase/database";
 import { useEffect } from "react";
 import { useContext } from "react";
 import { useState } from "react";
@@ -12,6 +12,41 @@ import {
   DbContext,
   UserContext,
 } from "./Context";
+
+const getCommentTimeDiff = (commTime) => {
+  let time = new Date().getTime() - commTime;
+  let test = 0;
+  test = Math.floor(time / (1000 * 60 * 60 * 24 * 7 * 4 * 12));
+  if (test !== 0) {
+    return `${test}y`;
+  }
+  test = Math.floor(time / (1000 * 60 * 60 * 24 * 7 * 4));
+  if (test !== 0) {
+    return `${test}M`;
+  }
+  test = Math.floor(time / (1000 * 60 * 60 * 24 * 7));
+  if (test !== 0) {
+    return `${test}w`;
+  }
+  test = Math.floor(time / (1000 * 60 * 60 * 24));
+  if (test !== 0) {
+    return `${test}d`;
+  }
+  test = Math.floor(time / (1000 * 60 * 60));
+  if (test !== 0) {
+    return `${test}h`;
+  }
+  test = Math.floor(time / (1000 * 60));
+  if (test !== 0) {
+    return `${test}m`;
+  }
+  test = Math.floor(time / 1000);
+  if (test !== 0) {
+    return `${test}s`;
+  }
+  return `now`;
+};
+
 const Messages = () => {
   const db = useContext(DbContext);
   const user = useContext(UserContext);
@@ -19,40 +54,49 @@ const Messages = () => {
   const [messageModal, setMessageModal] = useState(false);
   const [activeConvo, setActiveConvo] = useState({});
   const [convoList, setConvoList] = useState([]);
+  console.log(convoList);
+  useEffect(() => {
+    console.log(convoList);
+    onValue(ref(db, "messages"), (snapshot) => {
+      let list = snapshot.val()
+        ? snapshot
+            .val()
+            .filter((x) => {
+              for (let y of x.members) {
+                if (y.uid === user.uid) {
+                  return true;
+                }
+              }
+              return false;
+            })
+            .sort((a, b) => {
+              if (!a.message || !b.message) return false;
+              let aLength = a.message.length - 1;
+              let bLength = b.message.length - 1;
+              if (a.message[aLength].time > b.message[bLength].time) {
+                return false;
+              } else return true;
+            })
+        : null;
+      console.log(list);
+      if (convoList && !convoList.length) {
+        setConvoList(list);
+        if (!activeConvo || !activeConvo.members) setActiveConvo(list[0]);
+        else setActiveConvo(list[convoList.indexOf(activeConvo)]);
+        return;
+      }
 
-  const getConvoList = async () => {
-    let data = await (await get(ref(db, `messages`))).val();
-    console.log(data);
-    let list = data
-      ? data.filter((x) => {
-          for (let y of x.members) {
-            console.log(y.uid, user.uid);
-            if (y.uid === user.uid) {
-              console.log("worked");
-              return true;
-            }
+      for (let item of list) {
+        for (let ele of convoList) {
+          if (ele.message.length !== item.message.length) {
+            setConvoList(list);
+            setActiveConvo(list[convoList.indexOf(activeConvo)]);
+            return;
           }
-          return false;
-        })
-      : null;
-    if (convoList && !convoList.length) setConvoList(list);
-  };
-  useEffect(() => {
-    getConvoList();
-  }, [convoList, user.uid]);
-
-  useEffect(() => {
-    // // console.log(convoList[0]);
-    // convoList.sort((a, b) => {
-    //   let aLength = a.message.length - 1;
-    //   let bLength = b.message.length - 1;
-    //   if (a.message[aLength].time < b.message[bLength].time) {
-    //     return true;
-    //   } else return false;
-    // });
-    // console.log(convoList);
-    if (convoList && convoList.length) setActiveConvo(convoList[0]);
-  }, [convoList]);
+        }
+      }
+    });
+  }, [user.uid]);
 
   const checkMessage = (e) => {
     const input = e.target.value.trim();
@@ -62,7 +106,7 @@ const Messages = () => {
       button.removeAttribute("disabled");
     } else {
       button.classList.add("disabled");
-      button.disabled = true;
+      button.setAttribute("disabled", true);
     }
   };
 
@@ -70,9 +114,12 @@ const Messages = () => {
     const input = document.querySelector("#messagesinput");
     let data = await (await get(ref(db, "messages/"))).val();
     let index = 0;
+    if (!input.value) {
+      e.target.setAttribute("disabled", true);
+      return;
+    }
     if (data) {
       for (let item of data) {
-        console.log(item.members.map((x) => x.uid));
         if (
           item.members.map((x) => x.uid).includes(activeConvo.members[0].uid) &&
           item.members.map((x) => x.uid).includes(activeConvo.members[1].uid)
@@ -91,15 +138,15 @@ const Messages = () => {
             toPhoto: toData.photo,
             time: new Date().getTime(),
           });
-          await set(ref(db, `messages/${index}/`), newData);
+
           input.value = "";
 
           let convoTexts = { ...activeConvo };
           convoTexts.message = newData.message;
-          console.log(convoTexts, activeConvo);
           let newConvoList = convoList;
+          console.log("before", newConvoList);
           newConvoList[index] = convoTexts;
-          console.log(newConvoList);
+          console.log("after", newConvoList);
 
           let notifData = await (
             await get(ref(db, `notifications/${toId}`))
@@ -125,26 +172,19 @@ const Messages = () => {
                   },
                 ],
           };
-          console.log(newNotifData);
           await set(ref(db, `notifications/${toId}/`), newNotifData);
-
-          setActiveConvo(convoTexts);
-          setConvoList(newConvoList);
+          await set(ref(db, `messages/${index}/`), newData);
           return;
-          // setUpdate(update + 1)
         }
         index++;
       }
     }
     let newData = {};
-    console.log(activeConvo.members);
     let toId =
       user.uid !== activeConvo.members[0].uid
         ? activeConvo.members[0].uid
         : activeConvo.members[1].uid;
-    console.log(toId);
     let toData = await (await get(ref(db, `users/${toId}`))).val();
-    console.log(toData);
     newData.members = activeConvo.members;
     newData.message = [
       {
@@ -158,143 +198,182 @@ const Messages = () => {
     ];
     if (!data) index = 0;
     else index = data.length;
-    await set(ref(db, `messages/${index}/`), newData);
     input.value = "";
-
-    let convoTexts = { ...activeConvo };
-    convoTexts.message = newData.message;
-    console.log(convoTexts, activeConvo);
-    let newConvoList = convoList;
-    newConvoList[index] = convoTexts;
-    console.log(newConvoList);
-
-    setActiveConvo(convoTexts);
-    setConvoList(newConvoList);
+    await set(ref(db, `messages/${index}/`), newData);
   };
-
-  return (
-    <div className="messagesholder">
-      {messageModal ? (
-        <MessageModalContext.Provider value={messageModal}>
-          <SetMessageModalContext.Provider value={setMessageModal}>
-            <SetActiveConvoContext.Provider value={setActiveConvo}>
-              <ActiveConvoContext.Provider value={activeConvo}>
-                <MessageModal
-                  convoList={convoList}
-                  setConvoList={setConvoList}
-                />
-              </ActiveConvoContext.Provider>
-            </SetActiveConvoContext.Provider>
-          </SetMessageModalContext.Provider>
-        </MessageModalContext.Provider>
-      ) : null}
-      <div className="messageprofiles">
-        <div className="messageheader">
-          <div>Messages</div>
-          <Edit onClick={() => setMessageModal(true)} />
-        </div>
-        <div className="conversationlist">
-          {convoList
-            ? convoList
-                .sort((a, b) => {
-                  if (!a.message || !b.message) return false;
-                  let aLength = a.message.length - 1;
-                  let bLength = b.message.length - 1;
-                  if (a.message[aLength].time > b.message[bLength].time) {
-                    return false;
-                  } else return true;
-                })
-                .map((x) => {
-                  let data = {};
-                  x.members.forEach((ele, index) => {
-                    if (ele.uid === user.uid) {
-                      let num = 0;
-                      if (index === 0) num = 1;
-                      data.photo = x.members[num].photo;
-                      data.uid = x.members[num].uid;
-                    }
-                  });
-                  return (
-                    <div onClick={() => setActiveConvo(x)} key={uniqid()}>
-                      <img
-                        src={data.photo}
-                        alt=""
-                        height="25px"
-                        width="25px"
-                      ></img>
-                      <div>
-                        <div>{data.uid}</div>
-                        {x.message ? x.message[x.message.length - 1].text.substring(0, 10): null}
+  if (activeConvo)
+    return (
+      <div className="messagesholder">
+        {messageModal ? (
+          <MessageModalContext.Provider value={messageModal}>
+            <SetMessageModalContext.Provider value={setMessageModal}>
+              <SetActiveConvoContext.Provider value={setActiveConvo}>
+                <ActiveConvoContext.Provider value={activeConvo}>
+                  <MessageModal
+                    convoList={convoList}
+                    setConvoList={setConvoList}
+                  />
+                </ActiveConvoContext.Provider>
+              </SetActiveConvoContext.Provider>
+            </SetMessageModalContext.Provider>
+          </MessageModalContext.Provider>
+        ) : null}
+        <div className="messageprofiles">
+          <div className="messageheader">
+            <div>Messages</div>
+            <Edit onClick={() => setMessageModal(true)} />
+          </div>
+          <div className="conversationlist">
+            {convoList
+              ? convoList
+                  .sort((a, b) => {
+                    if (!a.message || !b.message) return false;
+                    let aLength = a.message.length - 1;
+                    let bLength = b.message.length - 1;
+                    if (a.message[aLength].time > b.message[bLength].time) {
+                      return false;
+                    } else return true;
+                  })
+                  .map((x) => {
+                    let data = {};
+                    x.members.forEach((ele, index) => {
+                      if (ele.uid === user.uid) {
+                        let num = 0;
+                        if (index === 0) num = 1;
+                        data.photo = x.members[num].photo;
+                        data.uid = x.members[num].uid;
+                      }
+                    });
+                    return (
+                      <div onClick={() => setActiveConvo(x)} key={uniqid()}>
+                        <img
+                          src={data.photo}
+                          alt=""
+                          height="25px"
+                          width="25px"
+                        ></img>
+                        <div>
+                          <div>{data.uid}</div>
+                          {x.message
+                            ? x.message[x.message.length - 1].text.substring(
+                                0,
+                                10
+                              )
+                            : null}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })
-            : null}
-        </div>
-      </div>
-
-      <div className="conversationholder">
-        <div className="conversationmessage">
-          <textarea
-            id="messagesinput"
-            onInput={(e) => {
-              checkMessage(e);
-            }}
-            placeholder="New Message"
-          ></textarea>
-          <div
-            id="msginputbut"
-            className="disabled"
-            disabled
-            onClick={(e) => sendMessage(e)}
-          >
-            Send
+                    );
+                  })
+              : null}
           </div>
         </div>
-        <div className="fromtomessageholder">
-          {activeConvo.message && activeConvo.message.length
-            ?
-            activeConvo.message
-            // .sort((a, b) => {
-            //   if (a.time < b.time) return true;
-            //   else return false;
-            // })
-            .map((msg) => {
-                if (msg.from === user.uid) {
-                  return (
-                    <div className="frommessageholder" key={uniqid()}>
-                      <div className="frommessage">
-                        <img
-                          src={msg.fromPhoto}
-                          alt=""
-                          height="40px"
-                          width="40px"
-                        ></img>
-                        <div>{msg.text}</div>
+
+        <div className="conversationholder">
+          <div className="conversationmessage">
+            <textarea
+              id="messagesinput"
+              onInput={(e) => {
+                checkMessage(e);
+              }}
+              placeholder="New Message"
+            ></textarea>
+            <div
+              id="msginputbut"
+              className="disabled"
+              disabled={true}
+              onClick={(e) => {
+                console.log(convoList);
+                sendMessage(e);
+              }}
+            >
+              Send
+            </div>
+          </div>
+          <div className="fromtomessageholder">
+            {activeConvo.message && activeConvo.message.length
+              ? activeConvo.message.map((msg) => {
+                  if (msg.from === user.uid) {
+                    return (
+                      <div className="frommessageholder" key={uniqid()}>
+                        <div className="frommessage">
+                          <div className="msgtime">
+                            {getCommentTimeDiff(msg.time)}
+                          </div>
+                          <img
+                            src={msg.fromPhoto}
+                            alt=""
+                            height="40px"
+                            width="40px"
+                          ></img>
+                          <div>{msg.text}</div>
+                        </div>
                       </div>
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div className="tomessageholder" key={uniqid()}>
-                      <div className="tomessage">
-                        <img
-                          src={msg.toPhoto}
-                          alt=""
-                          height="40px"
-                          width="40px"
-                        ></img>
-                        <div>{msg.text}</div>
+                    );
+                  } else {
+                    return (
+                      <div className="tomessageholder" key={uniqid()}>
+                        <div className="tomessage">
+                          <div className="msgtime">
+                            {getCommentTimeDiff(msg.time)}
+                          </div>
+                          <img
+                            src={msg.toPhoto}
+                            alt=""
+                            height="40px"
+                            width="40px"
+                          ></img>
+                          <div>{msg.text}</div>
+                        </div>
                       </div>
-                    </div>
-                  );
-                }
-              })
-            : null}
+                    );
+                  }
+                })
+              : null}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  else
+    return (
+      <div className="messagesholder">
+        <div className="messageprofiles">
+          <div className="messageheader">
+            <div
+              className="rectangle"
+              style={{ width: "105px", height: "30px" }}
+            ></div>
+            <div
+              className="rectangle"
+              style={{ width: "21px", height: "21px" }}
+            ></div>
+          </div>
+          <div className="conversationlist">
+            <div>
+              <div
+                className="circle"
+                style={{ width: "60px", height: "60px", margin: "10px" }}
+              ></div>
+              <div>
+                <div
+                  className="rectangle"
+                  style={{ width: "170px", height: "30px" }}
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="conversationholder">
+          <div className="conversationmessage">
+            <div
+              className="rectangle"
+              style={{ width: "70%", height: "30px", borderRadius: "50px" }}
+            ></div>
+            <div className="disabled">Send</div>
+          </div>
+        </div>
+      </div>
+    );
 };
 
 const MessageModal = ({ convoList, setConvoList }) => {
@@ -337,12 +416,9 @@ const MessageModal = ({ convoList, setConvoList }) => {
                 key={uniqid()}
                 className="messagemodalitem"
                 onClick={() => {
-                  console.log(x.uid);
                   if (convoList) {
                     for (let item of convoList) {
-                      console.log(item.members.map((y) => y.uid));
                       if (item.members.map((y) => y.uid).includes(x.uid)) {
-                        console.log("there already");
                         return;
                       }
                     }

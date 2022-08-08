@@ -17,7 +17,6 @@ import { async } from "@firebase/util";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-
 const FollowModal = () => {
   const { pid } = useParams();
   const [profile, setProfile] = useState({});
@@ -151,147 +150,158 @@ const FollowModal = () => {
     getInfo();
   }, [setUser, user]);
 
-  return (
-    <div className="modal">
-      <div className="followholder">
-        <div>
-          <div className="followheader">
-            {followingClick ? (
-              <>
-                <div className="followinghead active">Following</div>
-                <div
-                  className="followershead"
-                  onClick={() => setFollowingClick(false)}
-                >
-                  Followers
-                </div>
-              </>
-            ) : (
-              <>
-                <div
-                  className="followinghead"
-                  onClick={() => setFollowingClick(true)}
-                >
-                  Following
-                </div>
-                <div className="followershead active">Followers</div>
-              </>
-            )}
-            <CloseOutlined onClick={() => setFollowModalActive(false)} />
-          </div>
-          {followingClick ? (
-            <div className="followlist">
-              {followingList.length ? (
-                followingList.map((x) => {
-                  if (x.uid === userContext.uid)
-                    return (
-                      <div
-                        className="followingitems"
-                        key={uniqid()}
-                        onClick={(e) => {
-                          setFollowModalActive(false);
-                          navigate(`/profile/${x.uid}`);
-                        }}
-                      >
-                        <img src={x.photo} alt=""></img>
-                        <div>
-                          <div>{x.name}</div>
-                          <div>{x.uid}</div>
-                        </div>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            navigate("/settings");
-                          }}
-                        >
-                          Edit Profile
-                        </button>
-                      </div>
-                    );
-                  else
-                    return (
-                      <div
-                        className="followingitems"
-                        key={uniqid()}
-                        onClick={(e) => {
-                          setFollowModalActive(false);
-                          navigate(`/profile/${x.uid}`);
-                        }}
-                      >
-                        <img src={x.photo} alt=""></img>
-                        <div>
-                          <div>{x.name}</div>
-                          <div>{x.uid}</div>
-                        </div>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            unFollow(x);
-                          }}
-                        >
-                          Unfollow
-                        </button>
-                      </div>
-                    );
-                })
+  if (user && user.uid)
+    return (
+      <div className="modal">
+        <div className="followholder">
+          <div>
+            <div className="followheader">
+              {followingClick ? (
+                <>
+                  <div className="followinghead active">Following</div>
+                  <div
+                    className="followershead"
+                    onClick={() => setFollowingClick(false)}
+                  >
+                    Followers
+                  </div>
+                </>
               ) : (
-                <div className="nofollowing">Not following anyone</div>
+                <>
+                  <div
+                    className="followinghead"
+                    onClick={() => setFollowingClick(true)}
+                  >
+                    Following
+                  </div>
+                  <div className="followershead active">Followers</div>
+                </>
               )}
+              <CloseOutlined onClick={() => setFollowModalActive(false)} />
             </div>
-          ) : (
-            <div className="followlist">
-              {followerList.length ? (
-                followerList.map((x) => {
-                  if (x.uid === userContext.uid)
-                    return (
-                      <div
-                        className="followingitems"
-                        key={uniqid()}
-                        onClick={(e) => {
-                          setFollowModalActive(false);
-                          navigate(`/profile/${x.uid}`);
-                        }}
-                      >
-                        <img src={x.photo} alt=""></img>
-                        <div>
-                          <div>{x.name}</div>
-                          <div>{x.uid}</div>
-                        </div>
-                        <button
+            {followingClick ? (
+              <div className="followlist">
+                {followingList.length ? (
+                  followingList.map((x) => {
+                    if (x.uid === userContext.uid)
+                      return (
+                        <div
+                          className="followingitems"
+                          key={uniqid()}
                           onClick={(e) => {
-                            e.stopPropagation();
-                            navigate("/settings");
+                            setFollowModalActive(false);
+                            navigate(`/profile/${x.uid}`);
                           }}
                         >
-                          Edit Profile
-                        </button>
-                      </div>
-                    );
-                  else
-                    return (
-                      <div
-                        className="followingitems"
-                        key={uniqid()}
-                        onClick={(e) => {
-                          setFollowModalActive(false);
-                          navigate(`/profile/${x.uid}`);
-                        }}
-                      >
-                        <img src={x.photo} alt=""></img>
-                        <div>
-                          <div>{x.name}</div>
-                          <div>{x.uid}</div>
+                          <img src={x.photo} alt=""></img>
+                          <div>
+                            <div>{x.name}</div>
+                            <div>{x.uid}</div>
+                          </div>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate("/settings");
+                            }}
+                          >
+                            Edit Profile
+                          </button>
                         </div>
-                        {user.following ? (
-                          user.following.includes(x.uid) ? (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                unFollow(x);
-                              }}
-                            >
-                              Unfollow
-                            </button>
+                      );
+                    else
+                      return (
+                        <div
+                          className="followingitems"
+                          key={uniqid()}
+                          onClick={(e) => {
+                            setFollowModalActive(false);
+                            navigate(`/profile/${x.uid}`);
+                          }}
+                        >
+                          <img src={x.photo} alt=""></img>
+                          <div>
+                            <div>{x.name}</div>
+                            <div>{x.uid}</div>
+                          </div>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              unFollow(x);
+                            }}
+                          >
+                            Unfollow
+                          </button>
+                        </div>
+                      );
+                  })
+                ) : (
+                  <div className="nofollowing">Not following anyone</div>
+                )}
+              </div>
+            ) : (
+              <div className="followlist">
+                {followerList.length ? (
+                  followerList.map((x) => {
+                    if (x.uid === userContext.uid)
+                      return (
+                        <div
+                          className="followingitems"
+                          key={uniqid()}
+                          onClick={(e) => {
+                            setFollowModalActive(false);
+                            navigate(`/profile/${x.uid}`);
+                          }}
+                        >
+                          <img src={x.photo} alt=""></img>
+                          <div>
+                            <div>{x.name}</div>
+                            <div>{x.uid}</div>
+                          </div>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate("/settings");
+                            }}
+                          >
+                            Edit Profile
+                          </button>
+                        </div>
+                      );
+                    else
+                      return (
+                        <div
+                          className="followingitems"
+                          key={uniqid()}
+                          onClick={(e) => {
+                            setFollowModalActive(false);
+                            navigate(`/profile/${x.uid}`);
+                          }}
+                        >
+                          <img src={x.photo} alt=""></img>
+                          <div>
+                            <div>{x.name}</div>
+                            <div>@{x.uid}</div>
+                          </div>
+                          {user.following ? (
+                            user.following.includes(x.uid) ? (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  unFollow(x);
+                                }}
+                              >
+                                Unfollow
+                              </button>
+                            ) : (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  follow(x);
+                                }}
+                              >
+                                Follow
+                              </button>
+                            )
                           ) : (
                             <button
                               onClick={(e) => {
@@ -301,30 +311,112 @@ const FollowModal = () => {
                             >
                               Follow
                             </button>
-                          )
-                        ) : (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              follow(x);
-                            }}
-                          >
-                            Follow
-                          </button>
-                        )}
-                        {/* <button onClick={() => unFollow(x)}>Unfollow</button> */}
-                      </div>
-                    );
-                })
-              ) : (
-                <div className="nofollowing">No Followers</div>
-              )}
-            </div>
-          )}
+                          )}
+                          {/* <button onClick={() => unFollow(x)}>Unfollow</button> */}
+                        </div>
+                      );
+                  })
+                ) : (
+                  <div className="nofollowing">No Followers</div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  else
+    return (
+      <div className="modal">
+        <div className="followholder">
+          <div>
+            <div className="followheader">
+              <>
+                <div className="followinghead">Following</div>
+                <div className="followershead">Followers</div>
+              </>
+              <CloseOutlined onClick={() => setFollowModalActive(false)} />
+            </div>
+            <div className="followlist">
+              <div className="followingitems">
+                <div
+                  className="circle"
+                  style={{
+                    width: "60px",
+                    height: "60px",
+                    minWidth: "60px",
+                    maxWidth: "60px",
+                  }}
+                ></div>
+                <div>
+                  <div
+                    className="rectangle"
+                    style={{
+                      width: "150px",
+                      height: "26px",
+                    }}
+                  ></div>
+                  <div
+                    className="rectangle"
+                    style={{
+                      width: "80px",
+                      height: "20px",
+                    }}
+                  ></div>
+                </div>
+                <div
+                  className="rectangle"
+                  style={{
+                    minWidth: "120px",
+                    height: "45px",
+                    borderRadius: "50px",
+                    marginLeft: "auto",
+                    marginRight: "5px",
+                  }}
+                ></div>
+              </div>
+              <div className="followingitems">
+                <div
+                  className="circle"
+                  style={{
+                    width: "60px",
+                    height: "60px",
+                    minWidth: "60px",
+                    maxWidth: "60px",
+                  }}
+                ></div>
+                <div>
+                  <div
+                    className="rectangle"
+                    style={{
+                      width: "150px",
+                      height: "26px",
+                    }}
+                  ></div>
+                  <div
+                    className="rectangle"
+                    style={{
+                      width: "80px",
+                      height: "20px",
+                    }}
+                  ></div>
+                </div>
+                <div
+                  className="rectangle"
+                  style={{
+                    minWidth: "120px",
+                    height: "45px",
+                    borderRadius: "50px",
+                    marginLeft: "auto",
+                    marginRight: "5px",
+                  }}
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
 };
 
 export default FollowModal;

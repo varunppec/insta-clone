@@ -113,7 +113,6 @@ const HomePageSignUp = ({ userID, setTest }) => {
   };
   return (
     <div className="homepagesignup">
-      <div></div>
       <div className="signupformholder">
         <div className="signupform">
           <div className="signuphead">Instagram</div>

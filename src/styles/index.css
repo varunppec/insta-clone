@@ -121,8 +121,9 @@ nav {
 }
 
 .homepagesignup {
-    display: grid;
-    grid-template-columns: 2fr 3fr;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 100vh;
 }
 .signupform {
@@ -130,7 +131,6 @@ nav {
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    margin-top: 100px;
     width: fit-content;
     padding: 30px 50px;
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
@@ -199,10 +199,7 @@ nav {
 .userinfo > div:last-child {
     color: rgba(0, 0, 0, 0.4);
 }
-.userinfo > div:last-child::before {
-    content: "@";
-    
-}
+
 
 .userstats {
     margin-top: 5px;
@@ -415,10 +412,7 @@ nav {
     color: rgba(0, 0, 0, 0.5);
     font-size: 1.4rem;
 }
-.basedetails > div:nth-child(2)::before {
-    content: "@";
-   
-}
+
 
 .basedetails > div:last-child {
     display: flex;
@@ -738,9 +732,7 @@ nav {
 .followingitems > div > div:last-child {
     color: rgba(0, 0, 0, 0.4);
 }
-.followingitems > div > div:last-child::before {
-    content: "@"; 
-}
+
 
 .followingitems > button {
     margin-left: auto;
@@ -1466,29 +1458,6 @@ nav {
     color: rgb(0, 68, 255);
 }
 
-/* .popup { 
-  position: absolute;
-  left: -100px;
-  bottom: 0px;
-  transform: translate3d(0, 120%, 0);
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
-  background: white;
-  border-radius: 100px;
-  min-width: 200px;
-} 
-
-.popup::before {
-  content: "";
-  width: 20px;
-  height: 20px;
-  transform: translateX(0%) translateY(-50%) rotate(-45deg);
-  background: #fff;
-  position: absolute;
-  box-shadow: 1px 4px 8px rgba(0, 0, 0, 0.5);
-  z-index: -1;
-  top: 0;
-  left: 50%;
-} */
 .popup {
     position: absolute;
     width: 250px;
@@ -1561,3 +1530,4 @@ nav {
     font-size: 0.9rem;
     align-self: center;
 }
+

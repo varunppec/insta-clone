@@ -101,6 +101,7 @@ const MyProfile = () => {
       // navigate(`/profile/${profile.uid}`);
     }
   };
+  
   if (user.email && userContext.email) {
     return (
       <div className="myprofileholder">
@@ -124,7 +125,7 @@ const MyProfile = () => {
                   ? "Unfollow"
                   : "Follow"}
               </button>
-              <button>
+              <button onClick={() => navigate("/messages")}>
                 <Send></Send>
               </button>
             </div>
@@ -141,7 +142,7 @@ const MyProfile = () => {
           <div className="sideprofile">
             <div className="basedetails">
               <div>{user.name}</div>
-              <div>{user.uid}</div>
+              <div>@{user.uid}</div>
               <div>
                 <h3>{user.posts ? user.posts.length : 0}</h3>
                 <p>Posts</p>
@@ -201,7 +202,125 @@ const MyProfile = () => {
         </div>
       </div>
     );
-  } else return <div>Loading</div>;
+  } else
+    return (
+      <div className="myprofileholder">
+        <div className="profileppholder">
+          <div
+            className="rectangle"
+            style={{ width: "100%", height: "220px", borderRadius: "0" }}
+          ></div>
+        </div>
+        <div className="profilebuttons">
+          <div className="profilephoto">
+            <div
+              className="circle"
+              style={{ width: "200px", height: "200px" }}
+            ></div>
+          </div>
+          <div className="profbuttons">
+            <div
+              className="rectangle"
+              style={{ width: "150px", height: "50px", borderRadius: "100px" }}
+            ></div>
+            <div
+              className="circle"
+              style={{ width: "50px", height: "50px", borderRadius: "50%" }}
+            ></div>
+          </div>
+        </div>
+        <div className="profiledetails">
+          <div className="sideprofile">
+            <div className="basedetails">
+              <div
+                className="rectangle"
+                style={{ width: "100%", height: "40px", marginTop: "5px" }}
+              ></div>
+              <div
+                className="rectangle"
+                style={{ width: "40%", height: "25px", marginTop: "5px" }}
+              ></div>
+              <div>
+                <div
+                  className="rectangle"
+                  style={{
+                    width: "20px",
+                    height: "22px",
+                    marginTop: "20px",
+                    marginBottom: "20px",
+                  }}
+                ></div>
+                <div
+                  className="rectangle"
+                  style={{ width: "50px", height: "22px" }}
+                ></div>
+              </div>
+            </div>
+            <div className="followinfo">
+              <div>
+                <div
+                  className="rectangle"
+                  style={{ width: "20px", height: "22px" }}
+                ></div>
+                <div
+                  className="rectangle"
+                  style={{ width: "70px", height: "20px", marginTop: "2px" }}
+                ></div>
+              </div>
+              <div>
+                <div
+                  className="rectangle"
+                  style={{ width: "20px", height: "22px" }}
+                ></div>
+                <div
+                  className="rectangle"
+                  style={{ width: "70px", height: "20px", marginTop: "2px" }}
+                ></div>
+              </div>
+            </div>
+            <div className="bio">
+              <div
+                className="rectangle"
+                style={{
+                  width: "70px",
+                  height: "22px",
+                  marginBottom: "5px",
+                  marginTop: "10px",
+                }}
+              ></div>
+              <div>
+                <div
+                  className="rectangle"
+                  style={{ width: "100%", height: "20px", marginTop: "2px" }}
+                ></div>
+                <div
+                  className="rectangle"
+                  style={{ width: "100%", height: "20px", marginTop: "2px" }}
+                ></div>
+                <div
+                  className="rectangle"
+                  style={{ width: "100%", height: "20px", marginTop: "2px" }}
+                ></div>
+              </div>
+            </div>
+          </div>
+          <div className="postgrid">
+            <div
+              className="rectangle"
+              style={{ width: "100%", height: "100%", borderRadius: "10px" }}
+            ></div>
+            <div
+              className="rectangle"
+              style={{ width: "100%", height: "100%", borderRadius: "10px" }}
+            ></div>
+            <div
+              className="rectangle"
+              style={{ width: "100%", height: "100%", borderRadius: "10px" }}
+            ></div>
+          </div>
+        </div>
+      </div>
+    );
 };
 
 export default MyProfile;

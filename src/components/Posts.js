@@ -294,6 +294,7 @@ const Posts = () => {
   const handleChange = (e) => {
     if (e) setEmptyVal(e.target.val);
   };
+  
   if (userContext.name)
     return (
       <div className="postholder">
@@ -394,7 +395,185 @@ const Posts = () => {
         </div>
       </div>
     );
-  else return <div>Loading</div>;
+  else
+    return (
+      <div className="postholder">
+        <div className="post">
+          <div className="imgholder">
+            <div
+              className="rectangle"
+              style={{ width: "100%", height: "100%", borderRadius: "1px" }}
+            ></div>
+          </div>
+          <div className="postinfo">
+            <div className="postuploader">
+              <div className="postuserholder">
+                <div className="postuser">
+                  <div
+                    className="circle"
+                    style={{
+                      width: "70px",
+                      height: "70px",
+                      borderRadius: "50%",
+                    }}
+                  ></div>
+                  <div className="postuserinfo">
+                    <div
+                      className="rectangle"
+                      style={{
+                        width: "100px",
+                        height: "22px",
+                      }}
+                    ></div>
+                    <div
+                      className="rectangle"
+                      style={{
+                        width: "60px",
+                        height: "20px",
+                        marginTop: "2px",
+                      }}
+                    ></div>
+                  </div>
+                </div>
+                <div className="postcaption">
+                  {" "}
+                  <div
+                    className="rectangle"
+                    style={{
+                      width: "100%",
+                      height: "20px",
+                    }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+            <div className="postcomments">
+              <div>
+                <div
+                  className="circle"
+                  style={{ width: "30px", height: "30px", borderRadius: "50%" }}
+                ></div>
+                <div style={{ display: "flex" }}>
+                  <div
+                    className="rectangle"
+                    style={{
+                      display: "block",
+                      width: "40px",
+                      height: "20px",
+                    }}
+                  ></div>
+                  <div
+                    className="rectangle"
+                    style={{
+                      display: "block",
+                      width: "130px",
+                      height: "20px",
+                    }}
+                  ></div>
+                </div>
+                <div></div>
+              </div>
+              <div>
+                <div
+                  className="circle"
+                  style={{ width: "30px", height: "30px", borderRadius: "50%" }}
+                ></div>
+                <div style={{ display: "flex" }}>
+                  <div
+                    className="rectangle"
+                    style={{
+                      display: "block",
+                      width: "40px",
+                      height: "20px",
+                    }}
+                  ></div>
+                  <div>
+                    <div
+                      className="rectangle"
+                      style={{
+                        display: "block",
+                        width: "150px",
+                        height: "20px",
+                      }}
+                    ></div>
+                    <div
+                      className="rectangle"
+                      style={{
+                        display: "block",
+                        width: "150px",
+                        height: "20px",
+                        marginTop: "2px",
+                      }}
+                    ></div>
+                  </div>
+                </div>
+                <div></div>
+              </div>
+            </div>
+            <div className="postbuttons">
+              <div
+                className="rectangle"
+                style={{
+                  width: "25px",
+                  height: "23px",
+                }}
+              ></div>
+              <div
+                className="rectangle"
+                style={{
+                  width: "25px",
+                  height: "23px",
+                }}
+              ></div>
+              <div
+                className="rectangle"
+                style={{
+                  width: "25px",
+                  height: "23px",
+                  marginLeft: "auto",
+                }}
+              ></div>
+            </div>
+            <div className="postextrainfo">
+              <div
+                className="rectangle"
+                style={{
+                  width: "60px",
+                  height: "20px",
+                }}
+              ></div>
+              <div>
+                {" "}
+                <div
+                  className="rectangle"
+                  style={{
+                    width: "100px",
+                    height: "20px",
+                  }}
+                ></div>
+              </div>
+            </div>
+            <div className="addcomment">
+              <div
+                className="rectangle"
+                style={{
+                  width: "95%",
+                  height: "20px",
+                  marginRight: "2px"
+                }}
+              ></div>
+              <div
+                className="rectangle"
+                style={{
+                  width: "35px",
+                  height: "20px",
+                }}
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
 };
 
 export { Posts };
