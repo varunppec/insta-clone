@@ -16,7 +16,6 @@ const HomePageSignUp = ({ userID, setTest }) => {
   const setUser = useContext(SetUserContext);
   const signIn = async () => {
     const id = await checkID(); //checks if id is in db returns id if found else
-    console.log(id);
     if (!id) return;
     localStorage.setItem("userid", id);
     const provider = new GoogleAuthProvider();
@@ -25,6 +24,7 @@ const HomePageSignUp = ({ userID, setTest }) => {
     let data = await (await get(ref(dbContext, `users`))).val();
     let index;
     if (
+      data && 
       Object.keys(data)
         .map((x) => {
           index = x;
@@ -42,13 +42,10 @@ const HomePageSignUp = ({ userID, setTest }) => {
         usercode: value.uid,
         photo: value.photoURL,
         email: value.email,
-        followers: ["daddy"],
-        following: ["daddy"],
         posts: "",
         pp: "https://firebasestorage.googleapis.com/v0/b/insta-clone-3ada4.appspot.com/o/default_pp.jpg?alt=media&token=52c9c68a-5365-4dcd-9d7b-cda5457c86cb",
         bio: `Hey there! My name is ${value.displayName}. Stop stalking :(`,
       };
-      console.log(id);
       set(ref(dbContext, `users/${id}`), val);
       setUser(val);
     }
@@ -58,9 +55,9 @@ const HomePageSignUp = ({ userID, setTest }) => {
     const provider = new GoogleAuthProvider();
     const auth = getAuth();
     let result = await signInWithPopup(auth, provider);
-    console.log(result);
     let data = await (await get(ref(dbContext, `users`))).val();
     if (
+      data &&
       Object.keys(data)
         .map((x) => {
           return data[x].email;
@@ -72,22 +69,20 @@ const HomePageSignUp = ({ userID, setTest }) => {
           return data[x].email;
         })
         .indexOf(result.user.email);
-        index = Object.keys(data)[index]
+      index = Object.keys(data)[index];
       localStorage.setItem("userid", index);
-      console.log(data, index)
       setUser(data[index]);
     }
   };
 
   const checkID = async () => {
     let dbData = await (await get(ref(dbContext, "users/"))).val();
-    console.log(dbData);
     const input = document.querySelector("#userid");
     const errormessage = document.querySelector(".errormessage");
     const button = document.querySelector("#signupbut");
     button.classList.add("disabled");
     button.setAttribute("disabled", true);
-    errormessage.style.color = "rgba(0,0,0,0.4)";
+    errormessage.style.color = "rgb(127,127,127)";
     if (input.value === "") {
       errormessage.innerText = "ID must be between 3 - 15 characters";
       return;
@@ -100,7 +95,7 @@ const HomePageSignUp = ({ userID, setTest }) => {
       errormessage.innerText = "Too long";
       return;
     }
-    if (dbData[input.value]) {
+    if (dbData && dbData[input.value]) {
       errormessage.innerText = "ID has already been taken";
       return;
     } else {

@@ -66,13 +66,9 @@ const Posts = () => {
 
   const getData = async () => {
     let data = await (await get(ref(db, `users/${uid}/posts/`))).val();
-    console.log(profile, uid);
     let status = 0;
     for (let ele of data) {
-      console.log("1st", ele.postLink === pid && profile.uid !== uid);
-      console.log("2nd", ele.postLink === pid && profile.uid === uid);
       if (ele.postLink === pid && profile.uid !== uid) {
-        console.log("set");
         status = 1;
         let profileDetails = await (await get(ref(db, `users/${uid}`))).val();
         setProfile(profileDetails);
@@ -80,12 +76,10 @@ const Posts = () => {
         return;
       } else if (ele.postLink === pid && profile.uid === uid) {
         status = 2;
-        console.log("haah");
         return;
       }
     }
     if (status === 0) {
-      console.log("navigated");
       navigate("/profile");
     }
   };
@@ -115,7 +109,6 @@ const Posts = () => {
       arr.push(x);
     });
     arr.sort((a, b) => (a.time < b.time ? 1 : -1));
-    console.log("here 3");
     setPostData(arr);
   };
   const shareClicked = () => {
@@ -169,7 +162,6 @@ const Posts = () => {
             },
           ],
     };
-    console.log(newNotifData);
     await set(ref(db, `notifications/${profile.uid}/`), newNotifData);
     setProfile(data);
   };
@@ -237,7 +229,6 @@ const Posts = () => {
               },
             ],
       };
-      console.log(newNotifData);
       await set(ref(db, `notifications/${profile.uid}/`), newNotifData);
     }
     if (profile.uid === userContext.uid) setUserContext(data);

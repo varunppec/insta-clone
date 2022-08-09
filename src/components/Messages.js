@@ -54,9 +54,7 @@ const Messages = () => {
   const [messageModal, setMessageModal] = useState(false);
   const [activeConvo, setActiveConvo] = useState({});
   const [convoList, setConvoList] = useState([]);
-  console.log(convoList);
   useEffect(() => {
-    console.log(convoList);
     onValue(ref(db, "messages"), (snapshot) => {
       let list = snapshot.val()
         ? snapshot
@@ -78,7 +76,7 @@ const Messages = () => {
               } else return true;
             })
         : null;
-      console.log(list);
+      if (!list) return;
       if (convoList && !convoList.length) {
         setConvoList(list);
         if (!activeConvo || !activeConvo.members) setActiveConvo(list[0]);
@@ -144,9 +142,7 @@ const Messages = () => {
           let convoTexts = { ...activeConvo };
           convoTexts.message = newData.message;
           let newConvoList = convoList;
-          console.log("before", newConvoList);
           newConvoList[index] = convoTexts;
-          console.log("after", newConvoList);
 
           let notifData = await (
             await get(ref(db, `notifications/${toId}`))
@@ -220,7 +216,7 @@ const Messages = () => {
         ) : null}
         <div className="messageprofiles">
           <div className="messageheader">
-            <div>Messages</div>
+            <div data-testid="messages">Messages</div>
             <Edit onClick={() => setMessageModal(true)} />
           </div>
           <div className="conversationlist">
@@ -282,7 +278,6 @@ const Messages = () => {
               className="disabled"
               disabled={true}
               onClick={(e) => {
-                console.log(convoList);
                 sendMessage(e);
               }}
             >
@@ -336,7 +331,7 @@ const Messages = () => {
   else
     return (
       <div className="messagesholder">
-        <div className="messageprofiles">
+        <div className="messageprofiles" data-testid="loading">
           <div className="messageheader">
             <div
               className="rectangle"
@@ -389,12 +384,14 @@ const MessageModal = ({ convoList, setConvoList }) => {
       await get(ref(db, `users/${user.uid}/following`))
     ).val();
     let list = [];
-    for (let x of userFollowingData) {
-      let data = (await get(ref(db, `users/${x}/`))).val();
-      if (data.following.includes(user.uid))
-        list.push({ uid: data.uid, name: data.name, photo: data.photo });
+    if (userFollowingData) {
+      for (let x of userFollowingData) {
+        let data = (await get(ref(db, `users/${x}/`))).val();
+        if (data.following.includes(user.uid))
+          list.push({ uid: data.uid, name: data.name, photo: data.photo });
+      }
+      setDmableList(list);
     }
-    setDmableList(list);
   };
 
   useEffect(() => {

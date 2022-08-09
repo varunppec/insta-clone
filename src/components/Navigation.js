@@ -179,7 +179,6 @@ const Navigation = () => {
                         key={uniqid()}
                         onMouseDown={(e) => {
                           e.stopPropagation();
-                          console.log("clicked");
                           navigate(`/profile/${x.uid}`);
                         }}
                       >
@@ -206,7 +205,6 @@ const Navigation = () => {
           className={window.location.pathname === "/" ? "iconactive" : ""}
           onClick={() => navigate("/")}
         ></HomeOutlined>{" "}
-        
         <InboxOutlined
           className={
             window.location.pathname === "/messages" ? "iconactive" : ""
@@ -221,9 +219,9 @@ const Navigation = () => {
             }}
             className={notification ? "iconactive" : null}
           />{" "}
-          {notification
-            ? <Notification setNotification={setNotification} />
-            : null}
+          {notification ? (
+            <Notification setNotification={setNotification} />
+          ) : null}
         </div>
         <div className="personclick">
           <Person
@@ -237,7 +235,7 @@ const Navigation = () => {
             <div className="popup">
               <div onClick={() => navigate("/profile")}>
                 <AccountCircleRounded />
-                <div>My Profile</div> 
+                <div>My Profile</div>
               </div>
               <div
                 onClick={() => {
@@ -245,7 +243,7 @@ const Navigation = () => {
                 }}
               >
                 <LogoutRounded />
-                <div>Logout</div> 
+                <div>Logout</div>
               </div>
             </div>
           ) : null}
@@ -264,7 +262,6 @@ const Notification = ({ setNotification }) => {
   const navigate = useNavigate();
   const getData = async () => {
     let data = await (await get(ref(db, `notifications/${user.uid}`))).val();
-    console.log(data);
     if (data !== null) setNotifs(data.notifs);
     if (!data || !data.read) setRead(false);
     else setRead(true);
@@ -283,7 +280,6 @@ const Notification = ({ setNotification }) => {
           })
           .map((x) => {
             if (x.type === "like") {
-              console.log("here");
               return (
                 <div
                   key={uniqid()}
@@ -299,7 +295,6 @@ const Notification = ({ setNotification }) => {
                 </div>
               );
             } else if (x.type === "comment") {
-              console.log("here");
               return (
                 <div
                   key={uniqid()}
@@ -315,9 +310,9 @@ const Notification = ({ setNotification }) => {
                 </div>
               );
             } else if (x.type === "follow") {
-              console.log("here");
               return (
                 <div
+                  key={uniqid()}
                   onClick={() => {
                     setNotification(false);
                     navigate(`/profile/${x.url}`);
@@ -330,9 +325,9 @@ const Notification = ({ setNotification }) => {
                 </div>
               );
             } else {
-              console.log("here");
               return (
                 <div
+                  key={uniqid()}
                   onClick={() => {
                     setNotification(false);
                     navigate(`/messages`);

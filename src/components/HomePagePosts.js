@@ -31,15 +31,12 @@ const HomePagePosts = () => {
   const navigate = useNavigate();
 
   const viewProfile = (num) => {
-    console.log("clicked");
     const element = document.querySelector(".viewprofile" + num);
-    console.log(element);
     element.style.visibility = "visible";
     element.style.opacity = 1;
   };
 
   const closeViewProfile = (num) => {
-    console.log("clicked");
     const element = document.querySelector(".viewprofile" + num);
     element.style.visibility = "hidden";
     element.style.opacity = 0;
@@ -121,7 +118,6 @@ const HomePagePosts = () => {
             },
           ],
     };
-    console.log(newNotifData);
     await set(ref(db, `notifications/${post.uid}/`), newNotifData);
 
     setPostData(val);
@@ -183,7 +179,6 @@ const HomePagePosts = () => {
               },
             ],
       };
-      console.log(newNotifData);
       await set(ref(db, `notifications/${post.uid}/`), newNotifData);
     }
 
@@ -192,167 +187,171 @@ const HomePagePosts = () => {
 
   const getPostData = async () => {
     let arr = [];
-
-    for (let x of user.following) {
-      let data = await (await get(ref(db, `users/${x}/`))).val();
-      console.log(data.posts);
-      if (data.posts && data.posts.length) {
-        for (let y of data.posts) {
-          y.photo = data.photo;
-          y.name = data.name;
-          y.uid = data.uid;
-          arr.push(y);
-          console.log(y.likes);
+    if (user.following)
+      for (let x of user.following) {
+        let data = await (await get(ref(db, `users/${x}/`))).val();
+        if (data && data.posts && data.posts.length) {
+          for (let y of data.posts) {
+            y.photo = data.photo;
+            y.name = data.name;
+            y.uid = data.uid;
+            arr.push(y);
+          }
         }
       }
-    }
-    if (user.posts)
+    if (user.posts) {
       user.posts.forEach((x) => {
         x.photo = user.photo;
         x.name = user.name;
         x.uid = user.uid;
         arr.push(x);
       });
-    arr.sort((a, b) => (a.time < b.time ? 1 : -1));
-    console.log("here 2");
-    console.log(arr);
-    setPostData(arr);
+      arr.sort((a, b) => (a.time < b.time ? 1 : -1));
+      setPostData(arr);
+    }
   };
   useEffect(() => {
     getPostData();
-  }, [user.posts.length]);
+  }, [user.posts]);
   //   getPostData();
   if (!postData || !postData.length) getPostData();
 
-  if (postData && postData.length) {
+  if (user) {
     return (
       <div className="homepagegrid">
-        {postData.map((x, index) => {
-          return (
-            <div key={uniqid()} className="homepagepost">
-              <div>
-                <img
-                  onClick={() => navigate(`/profile/${x.uid}`)}
-                  height="35px"
-                  width="35px"
-                  src={x.photo}
-                  alt=""
-                ></img>
-                <div
-                  onClick={() => navigate(`/profile/${x.uid}`)}
-                  className="hppagepostuploadinfo"
-                >
-                  <div>{x.name}</div>
-                  <div>@{x.uid}</div>
-                </div>
-                <MoreHoriz onClick={() => viewProfile(index)} />
-              </div>
-              <img
-                onClick={() => navigate(`/posts/${x.uid}/${x.postLink}`)}
-                src={x.url}
-                alt=""
-              ></img>
-              <div className="postbuttons">
-                {x.likes ? (
-                  x.likes.includes(user.uid) ? (
-                    <FavoriteRounded
-                      className="favclicked"
-                      onClick={() => favClicked(x, index)}
+        {postData.length
+          ? postData.map((x, index) => {
+              return (
+                <div key={uniqid()} className="homepagepost">
+                  <div>
+                    <img
+                      onClick={() => navigate(`/profile/${x.uid}`)}
+                      height="35px"
+                      width="35px"
+                      src={x.photo}
+                      alt=""
+                    ></img>
+                    <div
+                      onClick={() => navigate(`/profile/${x.uid}`)}
+                      className="hppagepostuploadinfo"
+                    >
+                      <div>{x.name}</div>
+                      <div>@{x.uid}</div>
+                    </div>
+                    <MoreHoriz onClick={() => viewProfile(index)} />
+                  </div>
+                  <img
+                    onClick={() => navigate(`/posts/${x.uid}/${x.postLink}`)}
+                    src={x.url}
+                    alt=""
+                  ></img>
+                  <div className="postbuttons">
+                    {x.likes ? (
+                      x.likes.includes(user.uid) ? (
+                        <FavoriteRounded
+                          className="favclicked"
+                          onClick={() => favClicked(x, index)}
+                        />
+                      ) : (
+                        <Favorite onClick={() => favClicked(x, index)} />
+                      )
+                    ) : (
+                      <Favorite onClick={() => favClicked(x, index)} />
+                    )}
+                    <Comment
+                      onClick={() => {
+                        const id = document.querySelector(`#comment${index}`);
+                        id.value = "";
+                        id.focus();
+                      }}
                     />
-                  ) : (
-                    <Favorite onClick={() => favClicked(x, index)} />
-                  )
-                ) : (
-                  <Favorite onClick={() => favClicked(x, index)} />
-                )}
-                <Comment
-                  onClick={() => {
-                    const id = document.querySelector(`#comment${index}`);
-                    id.value = "";
-                    id.focus();
-                  }}
-                />
-                <div className="sharetooltip">
-                  <CopyToClipboard
-                    text={
-                      window.location.href + "posts/" + x.uid + "/" + x.postLink
-                    }
-                  >
-                    <Share onClick={() => shareClicked(index)}></Share>
-                  </CopyToClipboard>
-                  <div className={"sharetooltiptext sharetooltiptext" + index}>
-                    Copied to clickboard
+                    <div className="sharetooltip">
+                      <CopyToClipboard
+                        text={
+                          window.location.href +
+                          "posts/" +
+                          x.uid +
+                          "/" +
+                          x.postLink
+                        }
+                      >
+                        <Share onClick={() => shareClicked(index)}></Share>
+                      </CopyToClipboard>
+                      <div
+                        className={"sharetooltiptext sharetooltiptext" + index}
+                      >
+                        Copied to clickboard
+                      </div>
+                    </div>
+                  </div>
+                  <div className="postextrainfo">
+                    <div>{x.likes ? x.likes.length : 0} likes</div>
+                  </div>
+                  <div className="hppostcaption">
+                    <div>{x.uid}</div>
+                    <div>{x.caption}</div>
+                  </div>
+                  {x.comments && x.comments.length > 0 ? (
+                    <div
+                      className="viewcomments"
+                      onClick={() => navigate(`/posts/${x.uid}/${x.postLink}`)}
+                    >
+                      View all comments
+                    </div>
+                  ) : null}
+
+                  <div className="somecomments">
+                    {x.comments && x.comments.length ? (
+                      x.comments
+                        .sort((a, b) => (a.time < b.time ? 1 : -1))
+                        .map((com, index) => {
+                          return index > 1 ? null : (
+                            <div key={uniqid()}>
+                              <div>{com.uid}</div>
+                              <div>{com.comment}</div>
+                            </div>
+                          );
+                        })
+                    ) : (
+                      <div>No comments</div>
+                    )}
+                  </div>
+                  <div className="posttimeupload">{getTimeDiff(x.time)}</div>
+                  <div className="addcomment">
+                    <textarea
+                      id={"comment" + index}
+                      onInput={(e) => enablePostButton(e, x, index)}
+                      maxLength="100"
+                      placeholder="Add a comment..."
+                      value={emptyVal}
+                      onChange={handleChange}
+                    ></textarea>
+                    <button disabled id={"post" + index} className="disabled">
+                      Post
+                    </button>
+                  </div>
+                  <div className={"viewprofile viewprofile" + index}>
+                    <CloseOutlined
+                      onClick={() => {
+                        closeViewProfile(index);
+                      }}
+                    />
+                    <div>
+                      {x.uid === user.uid ? (
+                        <button onClick={() => navigate("/profile")}>
+                          Edit Profile
+                        </button>
+                      ) : (
+                        <button onClick={() => navigate(`/profile/${x.uid}`)}>
+                          View Profile
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="postextrainfo">
-                <div>{x.likes ? x.likes.length : 0} likes</div>
-              </div>
-              <div className="hppostcaption">
-                <div>{x.uid}</div>
-                <div>{x.caption}</div>
-              </div>
-              {x.comments && x.comments.length > 0 ? (
-                <div
-                  className="viewcomments"
-                  onClick={() => navigate(`/posts/${x.uid}/${x.postLink}`)}
-                >
-                  View all comments
-                </div>
-              ) : null}
-
-              <div className="somecomments">
-                {x.comments && x.comments.length ? (
-                  x.comments
-                    .sort((a, b) => (a.time < b.time ? 1 : -1))
-                    .map((com, index) => {
-                      return index > 1 ? null : (
-                        <div key={uniqid()}>
-                          <div>{com.uid}</div>
-                          <div>{com.comment}</div>
-                        </div>
-                      );
-                    })
-                ) : (
-                  <div>No comments</div>
-                )}
-              </div>
-              <div className="posttimeupload">{getTimeDiff(x.time)}</div>
-              <div className="addcomment">
-                <textarea
-                  id={"comment" + index}
-                  onInput={(e) => enablePostButton(e, x, index)}
-                  maxLength="100"
-                  placeholder="Add a comment..."
-                  value={emptyVal}
-                  onChange={handleChange}
-                ></textarea>
-                <button disabled id={"post" + index} className="disabled">
-                  Post
-                </button>
-              </div>
-              <div className={"viewprofile viewprofile" + index}>
-                <CloseOutlined
-                  onClick={() => {
-                    console.log("clicked");
-                    closeViewProfile(index);
-                  }}
-                />
-                <div>
-                  {x.uid === user.uid ? (
-                    <button onClick={() => navigate("/profile")}>
-                      Edit Profile
-                    </button>
-                  ) : (
-                    <button onClick={() => navigate(`/profile/${x.uid}`)}>
-                      View Profile
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-          );
-        })}
+              );
+            })
+          : null}
       </div>
     );
   } else {

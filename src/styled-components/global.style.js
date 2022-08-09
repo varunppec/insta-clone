@@ -855,7 +855,7 @@ nav {
 
 .supinputs {
     display: flex;
-    border: 1px solid rgba(0, 0, 0, 0.308); //here
+    border: 1px solid ${({theme}) => theme.borderColor}; 
     border-radius: 50px;
     width: fit-content;
     padding: 5px 0;
@@ -863,8 +863,8 @@ nav {
 }
 
 .supinputs > div {
-    border-right: 1px solid rgba(0, 0, 0, 0.308); //here
-    color: rgba(0, 0, 0, 0.308); //here
+    border-right: 1px solid ${({theme}) => theme.borderColor};  
+    color: rgb(127, 127, 127); //here
     padding: 0 5px;
 }
 .supinputs > input {
@@ -872,7 +872,7 @@ nav {
     border: none;
     margin: 0 5px;
     border-radius: 10px;
-    background-color: ${({theme}) => theme.postBgColor};
+    background-color: ${({theme}) => theme.mainBgColor};
     color: ${({theme}) => theme.textColor};
     padding: 5px 10px;
 }
@@ -959,6 +959,7 @@ nav {
     display: flex;
     gap: 50px;
     justify-content: center;
+    min-height: calc(100vh - 70px);
 }
 
 .homepageholder > div:last-child {

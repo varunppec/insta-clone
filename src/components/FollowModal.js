@@ -34,14 +34,12 @@ const FollowModal = () => {
   if (pid && Object.keys(profile).length === 0) {
     get(ref(db, `users/${pid}`)).then((snap) => {
       if (snap.val() === null || pid === localStorage.getItem("userid")) {
-        console.log("navigated");
         navigate("/profile");
       } else setProfile(snap.val());
     });
   }
 
   const user = Object.keys(profile).length ? profile : userContext;
-  console.log(user.uid);
 
   const unFollow = async (profile) => {
     let followerData = await (
@@ -96,7 +94,6 @@ const FollowModal = () => {
             },
           ],
     };
-    console.log(newNotifData);
     await set(ref(db, `notifications/${profile.uid}/`), newNotifData);
     let followingData = await (
       await get(ref(db, `users/${profile.uid}`))
@@ -134,7 +131,6 @@ const FollowModal = () => {
           user.followers.forEach(async (profile, index, array) => {
             let data = await (await get(ref(db, `users/${profile}`))).val();
             followerLis.push(data);
-            console.log(followerLis);
             if (index === array.length - 1) resolve();
           });
         else resolve();

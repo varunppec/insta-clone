@@ -62,7 +62,6 @@ function App() {
   const [followModalActive, setFollowModalActive] = useState(false);
   const [followingClick, setFollowingClick] = useState(true);
   const [postData, setPostData] = useState({});
-  const loggedIn = useRef(false);
   const [theme, setTheme] = useState(true);
 
   useEffect(() => {
@@ -70,23 +69,18 @@ function App() {
     setDb(database);
   }, []);
   useEffect(() => {
-    if (localStorage.getItem("userid")) loggedIn.current = true;
     printIt();
   }, []);
   const printIt = async () => {
     let id = localStorage.getItem("userid");
-    console.log(id);
     if (id) {
       let data = await (await get(ref(db, `users/${id}`))).val();
       if (data) setUser(data);
     }
   };
-  console.log(theme);
   if (user)
     return (
-      <div className="App" 
-      style={style}
-      >
+      <div className="App" style={style}>
         <BrowserRouter>
           <FollowingClickContext.Provider value={followingClick}>
             <SetFollowingClickContext.Provider value={setFollowingClick}>
@@ -102,73 +96,101 @@ function App() {
                                 <SetUserContext.Provider value={setUser}>
                                   <SetThemeContext.Provider value={setTheme}>
                                     <ThemeContext.Provider value={theme}>
-                                      <ThemeProvider theme={theme ? lightTheme : darkTheme}>
-                                      <GlobalStyles />
-                                      <Routes>
-                                        <Route
-                                          path="/"
-                                          element={
-                                            user.uid ? (
-                                              <>
-                                                <Navigation />
-                                                <HomePage />
-                                              </>
-                                            ) : (
-                                              <>{<HomePageSignUp />}</>
-                                            )
-                                          }
-                                        ></Route>
-                                        <Route
-                                          path="/settings"
-                                          element={
-                                            <>
-                                              <Navigation />
-                                              <ProfileSettings />
-                                            </>
-                                          }
-                                        ></Route>
-                                        <Route
-                                          path="/messages"
-                                          element={
-                                            <>
-                                              <Navigation />
-                                              <Messages />
-                                            </>
-                                          }
-                                        ></Route>
-                                        <Route
-                                          path="/posts/:uid/:pid"
-                                          element={
-                                            <>
-                                              <Navigation />
-                                              <Posts />
-                                            </>
-                                          }
-                                        />
-                                        <Route
-                                          path="/profile"
-                                          element={
-                                            <>
-                                              <Navigation />
-                                              <MyProfile />
-                                            </>
-                                          }
-                                        >
+                                      <ThemeProvider
+                                        theme={theme ? lightTheme : darkTheme}
+                                      >
+                                        <GlobalStyles />
+                                        <Routes>
                                           <Route
-                                            path=":pid"
+                                            path="/"
                                             element={
-                                              <>
-                                                <Navigation />
-                                                <MyProfile />
-                                              </>
+                                              !user.uid ? (
+                                                <HomePageSignUp />
+                                              ) : (
+                                                <>
+                                                  <Navigation />
+                                                  <HomePage />
+                                                </>
+                                              )
                                             }
                                           ></Route>
-                                        </Route>
-                                        <Route
-                                          path="*"
-                                          element={<Navigate to="/"></Navigate>}
-                                        />
-                                      </Routes>
+                                          <Route
+                                            path="/settings"
+                                            element={
+                                              !user.uid ? (
+                                                <HomePageSignUp />
+                                              ) : (
+                                                <>
+                                                  <Navigation />
+                                                  <ProfileSettings />
+                                                </>
+                                              )
+                                            }
+                                          ></Route>
+                                          <Route
+                                            path="/messages"
+                                            element={
+                                              !user.uid ? (
+                                                <HomePageSignUp />
+                                              ) : (
+                                                <>
+                                                  <Navigation />
+                                                  <Messages />
+                                                </>
+                                              )
+                                            }
+                                          ></Route>
+                                          <Route
+                                            path="/posts/:uid/:pid"
+                                            element={
+                                              !user.uid ? (
+                                                <HomePageSignUp />
+                                              ) : (
+                                                <>
+                                                  <Navigation />
+                                                  <Posts />
+                                                </>
+                                              )
+                                            }
+                                          />
+                                          <Route
+                                            path="/profile"
+                                            element={
+                                              !user.uid ? (
+                                                <HomePageSignUp />
+                                              ) : (
+                                                <>
+                                                  <Navigation />
+                                                  <MyProfile />
+                                                </>
+                                              )
+                                            }
+                                          >
+                                            <Route
+                                              path=":pid"
+                                              element={
+                                                !user.uid ? (
+                                                  <HomePageSignUp />
+                                                ) : (
+                                                  <>
+                                                    <Navigation />
+                                                    <MyProfile />
+                                                  </>
+                                                )
+                                              }
+                                            ></Route>
+                                          </Route>
+                                          <Route
+                                            path="*"
+                                            element={
+                                              !user.uid ? (
+                                                <HomePageSignUp />
+                                              ) : (
+                                                <Navigate to="/"></Navigate>
+                                              )
+                                            }
+                                          />
+                                        </Routes>
                                       </ThemeProvider>
                                     </ThemeContext.Provider>
                                   </SetThemeContext.Provider>
@@ -187,7 +209,7 @@ function App() {
         </BrowserRouter>
       </div>
     );
-    else return <div>Loading</div>
+  else return <div>Loading</div>;
 }
 
 export default App;

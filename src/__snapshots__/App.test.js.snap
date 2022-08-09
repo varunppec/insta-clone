@@ -1,0 +1,348 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App component renders App properly 1`] = `
+<div>
+  <div
+    class="App"
+  >
+    <div
+      class="homepagesignup"
+    >
+      <div
+        class="signupformholder"
+      >
+        <div
+          class="signupform"
+        >
+          <div
+            class="signuphead"
+          >
+            Instagram
+          </div>
+          <div
+            class="signupinputs"
+          >
+            <div
+              class="supinputs"
+            >
+              <div>
+                @
+              </div>
+              <input
+                autocomplete="off"
+                id="userid"
+                placeholder="Username"
+                type="text"
+              />
+            </div>
+            <div
+              class="errormessage"
+            >
+              ID must be between 3 - 15 characters
+            </div>
+          </div>
+          <div>
+            <button
+              class="disabled"
+              id="signupbut"
+            >
+              Sign Up
+            </button>
+          </div>
+          <div
+            class="signupor"
+          >
+            <div />
+            <div>
+              OR
+            </div>
+            <div />
+          </div>
+          <div
+            class="logindiv"
+          >
+            <div>
+              Already have an account?
+            </div>
+            <div
+              class="login"
+            >
+              <div>
+                Log in with Google
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Messages Message loads onclick 1`] = `
+<div>
+  <div
+    class="App"
+  >
+    <nav>
+      <div
+        class="navhead"
+      >
+        <div>
+          Instagram
+        </div>
+      </div>
+      <div
+        class="navinput searchmenu"
+      >
+        <input
+          placeholder="Search"
+          type="text"
+        />
+      </div>
+      <div
+        class="navicons"
+      >
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+          data-testid="HomeRoundedIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z"
+          />
+        </svg>
+         
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium iconactive css-i4bv87-MuiSvgIcon-root"
+          data-testid="ChatBubbleIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"
+          />
+        </svg>
+         
+        <div
+          class="heartclick"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+            data-testid="FavoriteRoundedIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M13.35 20.13c-.76.69-1.93.69-2.69-.01l-.11-.1C5.3 15.27 1.87 12.16 2 8.28c.06-1.7.93-3.33 2.34-4.29 2.64-1.8 5.9-.96 7.66 1.1 1.76-2.06 5.02-2.91 7.66-1.1 1.41.96 2.28 2.59 2.34 4.29.14 3.88-3.3 6.99-8.55 11.76l-.1.09z"
+            />
+          </svg>
+           
+        </div>
+        <div
+          class="personclick"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+            data-testid="PersonRoundedIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v1c0 .55.45 1 1 1h14c.55 0 1-.45 1-1v-1c0-2.66-5.33-4-8-4z"
+            />
+          </svg>
+           
+        </div>
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+          data-testid="DarkModeIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"
+          />
+        </svg>
+      </div>
+    </nav>
+    <div
+      class="messagesholder"
+    >
+      <div
+        class="messageprofiles"
+      >
+        <div
+          class="messageheader"
+        >
+          <div
+            data-testid="messages"
+          >
+            Messages
+          </div>
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z"
+            />
+          </svg>
+        </div>
+        <div
+          class="conversationlist"
+        >
+          <div>
+            <img
+              alt=""
+              height="25px"
+              src="https://firebasestorage.googleapis.com/v0/b/insta-clone-3ada4.appspot.com/o/test%2Fphoto%2Fl4lta5u8?alt=media&token=6a6567c8-ac9b-4195-9dd7-ffff639e4afe"
+              width="25px"
+            />
+            <div>
+              <div>
+                daddy
+              </div>
+              yup workin
+            </div>
+          </div>
+          <div>
+            <img
+              alt=""
+              height="25px"
+              src="https://lh3.googleusercontent.com/a/AItbvmmrQZ36fjxQXm21QYEutHU_YcFg5lob8QR0K_uu=s96-c"
+              width="25px"
+            />
+            <div>
+              <div>
+                angwykitten
+              </div>
+              test?
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="conversationholder"
+      >
+        <div
+          class="conversationmessage"
+        >
+          <textarea
+            id="messagesinput"
+            placeholder="New Message"
+          />
+          <div
+            class="disabled"
+            disabled=""
+            id="msginputbut"
+          >
+            Send
+          </div>
+        </div>
+        <div
+          class="fromtomessageholder"
+        >
+          <div
+            class="frommessageholder"
+          >
+            <div
+              class="frommessage"
+            >
+              <div
+                class="msgtime"
+              >
+                2w
+              </div>
+              <img
+                alt=""
+                height="40px"
+                src="https://firebasestorage.googleapis.com/v0/b/insta-clone-3ada4.appspot.com/o/test%2Fphoto%2Fl5429hoe?alt=media&token=f6e7d741-a523-4afb-a339-2825c10354af"
+                width="40px"
+              />
+              <div>
+                testing dad
+
+              </div>
+            </div>
+          </div>
+          <div
+            class="frommessageholder"
+          >
+            <div
+              class="frommessage"
+            >
+              <div
+                class="msgtime"
+              >
+                2w
+              </div>
+              <img
+                alt=""
+                height="40px"
+                src="https://firebasestorage.googleapis.com/v0/b/insta-clone-3ada4.appspot.com/o/test%2Fphoto%2Fl5429hoe?alt=media&token=f6e7d741-a523-4afb-a339-2825c10354af"
+                width="40px"
+              />
+              <div>
+                tested
+              </div>
+            </div>
+          </div>
+          <div
+            class="frommessageholder"
+          >
+            <div
+              class="frommessage"
+            >
+              <div
+                class="msgtime"
+              >
+                2w
+              </div>
+              <img
+                alt=""
+                height="40px"
+                src="https://firebasestorage.googleapis.com/v0/b/insta-clone-3ada4.appspot.com/o/test%2Fphoto%2Fl5429hoe?alt=media&token=f6e7d741-a523-4afb-a339-2825c10354af"
+                width="40px"
+              />
+              <div>
+                haha its working
+              </div>
+            </div>
+          </div>
+          <div
+            class="frommessageholder"
+          >
+            <div
+              class="frommessage"
+            >
+              <div
+                class="msgtime"
+              >
+                1d
+              </div>
+              <img
+                alt=""
+                height="40px"
+                src="https://firebasestorage.googleapis.com/v0/b/insta-clone-3ada4.appspot.com/o/test%2Fphoto%2Fl5429hoe?alt=media&token=f6e7d741-a523-4afb-a339-2825c10354af"
+                width="40px"
+              />
+              <div>
+                yup working
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

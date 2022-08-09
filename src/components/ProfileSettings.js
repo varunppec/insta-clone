@@ -64,12 +64,9 @@ const ProfileSettings = () => {
       let random1 = await (await listAll(oldImageRef)).items;
       random1.forEach((x) => deleteObject(x));
       const newImageRef = await sref(storage, `${user.uid}/photo/${uniqid()}`);
-      console.log('kk', photoFiles)
       await uploadBytes(newImageRef, photoFiles);
       const newUrl = await getDownloadURL(newImageRef);
-      console.log(newUrl);
       data.photo = newUrl;
-      console.log(data);
       set(ref(db, `users/${user.uid}/`), data);
     }
     if (user.pp !== ppFiles) {
@@ -79,7 +76,6 @@ const ProfileSettings = () => {
       const newImageRef = await sref(storage, `${user.uid}/pp/${uniqid()}`);
       await uploadBytes(newImageRef, ppFiles);
       const newUrl = await getDownloadURL(newImageRef);
-      console.log(newUrl);
       data.pp = newUrl;
       set(ref(db, `users/${user.uid}/`), data);
     }
@@ -127,7 +123,6 @@ const ProfileSettings = () => {
     reader.onload = (function (aImg) {
       return function (e) {
         aImg.src = e.target.result;
-        console.log(aImg.src);
       };
     })(image);
     reader.readAsDataURL(photo);
